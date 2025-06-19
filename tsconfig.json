@@ -17,6 +17,9 @@
     },
     {
       "path": "./domain/events"
+    },
+    {
+      "path": "./application/sandbox"
     }
   ]
 }

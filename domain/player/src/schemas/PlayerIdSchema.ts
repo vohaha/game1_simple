@@ -6,6 +6,9 @@ import { validate as uuidValidate, version as uuidVersion } from 'uuid';
  */
 export const PlayerIdSchema = z
   .string()
-  .refine((val) => uuidValidate(val) && uuidVersion(val) === 4, {
+  .refine((val) => {
+    console.log(val);
+    return uuidValidate(val) && uuidVersion(val) === 4;
+  }, {
     message: 'Invalid PlayerId: must be a valid UUID v4',
   });

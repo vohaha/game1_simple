@@ -1,5 +1,5 @@
-import { PlayerId } from '@/value-objects/PlayerId.ts';
-import { Energy } from '@/value-objects/Energy.ts';
+import { PlayerId } from '../value-objects/PlayerId.ts';
+import { Energy } from '../value-objects/Energy.ts';
 
 /**
  * Represents a player in the simulation.

@@ -3,13 +3,13 @@
  * Encapsulates construction logic and ensures invariants at creation.
  */
 
-import { Player } from '@/entities/Player.ts';
-import { PlayerId } from '@/value-objects/PlayerId.ts';
-import { Energy } from '@/value-objects/Energy.ts';
+import { Player } from '../entities/Player.ts';
+import { PlayerId } from '../value-objects/PlayerId.ts';
+import { Energy } from '../value-objects/Energy.ts';
 
 export interface CreatePlayerProps {
-  id: string;
   name: string;
+  id?: string;
   energy?: number;
 }
 
@@ -22,7 +22,7 @@ export class PlayerFactory {
    * @param props - Properties required to instantiate a Player.
    */
   public static create(props: CreatePlayerProps): Player {
-    const playerId = new PlayerId(props.id);
+    const playerId = new PlayerId(props.id ?? `${PlayerId.generate().value}`);
     const energy = new Energy(props.energy ?? Energy.DEFAULT);
 
     return new Player({

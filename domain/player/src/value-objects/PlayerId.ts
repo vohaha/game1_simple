@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { PlayerIdSchema } from '@/schemas/PlayerIdSchema.ts';
+import { PlayerIdSchema } from '../schemas/PlayerIdSchema.ts';
 
 /**
  * Value Object representing a unique Player identifier.
