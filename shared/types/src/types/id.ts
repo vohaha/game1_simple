@@ -2,37 +2,45 @@ import { z } from 'zod/v4';
 import { v4 as uuidv4 } from 'uuid';
 
 export const IdSchema = z.uuidv4('ID must be a valid UUID v4');
+export type IdType = z.infer<typeof IdSchema>;
 
-export class Id {
-  private readonly _value: string;
+export class AnId {
+  private readonly _value: IdType;
 
-  private constructor(value: string) {
+  private constructor(value: IdType) {
     this._value = IdSchema.parse(value);
   }
 
-  public static generate(): Id {
-    return new Id(uuidv4());
+  public static generate(): AnId {
+    return new AnId(uuidv4());
   }
 
-  public static fromValue(value: string): Id {
-    return new Id(value);
+  public static fromValue(value: string): AnId {
+    return new AnId(value);
   }
 
   public static safeParse(
     value: string
-  ): { success: true; data: Id } | { success: false; error: z.ZodError } {
+  ): { success: true; data: AnId } | { success: false; error: z.ZodError } {
     const result = IdSchema.safeParse(value);
     if (result.success) {
-      return { success: true, data: new Id(result.data) };
+      return { success: true, data: new AnId(result.data) };
     }
     return { success: false, error: result.error };
   }
 
-  public get value(): string {
+  public get value(): IdType {
     return this._value;
   }
 
-  public equals(other: Id): boolean {
+  public equals(other: unknown): boolean {
+    if (other == null) {
+      return false;
+    }
+    if (!(other instanceof AnId)) {
+      return false;
+    }
+
     return this._value === other._value;
   }
 
