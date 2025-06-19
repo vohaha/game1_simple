@@ -1,8 +1,14 @@
 import { defineConfig } from 'vite';
+import path from 'path';
 
 export default defineConfig(() => ({
   root: __dirname,
   cacheDir: '../../node_modules/.vite/domain/player',
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+    },
+  },
   plugins: [],
   // Uncomment this if you are using workers.
   // worker: {
