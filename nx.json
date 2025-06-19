@@ -31,7 +31,8 @@
         "domain/action_tokens/*",
         "domain/concentration/*",
         "domain/deal_template/*",
-        "domain/events/*"
+        "domain/events/*",
+        "shared/types/*"
       ]
     },
     {
@@ -41,7 +42,8 @@
         "domain/action_tokens/*",
         "domain/concentration/*",
         "domain/deal_template/*",
-        "domain/events/*"
+        "domain/events/*",
+        "shared/types/*"
       ],
       "options": {
         "typecheck": {

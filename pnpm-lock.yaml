@@ -136,9 +136,15 @@ importers:
 
   domain/deal_template: {}
 
-  domain/events: {}
+  domain/events:
+    devDependencies:
+      '@game1/types':
+        specifier: workspace:*
+        version: link:../../shared/types
 
   domain/player: {}
+
+  shared/types: {}
 
 packages:
 

@@ -20,6 +20,9 @@
     },
     {
       "path": "./application/sandbox"
+    },
+    {
+      "path": "./shared/types"
     }
   ]
 }

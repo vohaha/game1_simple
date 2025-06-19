@@ -1,5 +1,5 @@
 {
-  "name": "@game1/events",
+  "name": "@game1/types",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -13,8 +13,5 @@
     },
     "./package.json": "./package.json"
   },
-  "dependencies": {},
-  "devDependencies": {
-    "@game1/types": "workspace:*"
-  }
+  "dependencies": {}
 }

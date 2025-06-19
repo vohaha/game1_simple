@@ -3,7 +3,7 @@
  * Encapsulates player-related business logic that doesn't belong to the Player entity itself.
  */
 
-import { Player } from '@/entities/Player.ts';
+import { Player } from '../entities/Player.ts';
 
 /**
  * PlayerDomainService provides domain operations involving Player aggregates.
