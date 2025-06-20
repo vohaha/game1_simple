@@ -1,8 +1,7 @@
 import { Energy } from '../value-objects/Energy.ts';
 import { Entity } from '@game1/types';
-import { DomainEventAware } from '@game1/events';
 
-export class Individual extends Entity implements DomainEventAware {
+export class Individual extends Entity {
   private _name: string;
   private _energy: Energy;
 

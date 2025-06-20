@@ -13,5 +13,8 @@
     },
     "./package.json": "./package.json"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "@game1/types": "workspace:*"
+  }
 }

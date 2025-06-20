@@ -1,4 +1,4 @@
-import { AnId, ISerializable } from '@game1/types';
+import { Id, ISerializable } from '@game1/types';
 import { IDomainEvent } from '../interfaces/IDomainEvent.ts';
 import { DomainEventSchema } from '../schemas/DomainEventSchema.ts';
 
@@ -20,7 +20,7 @@ export abstract class DomainEvent
   ) {
     const eventData = DomainEventSchema.parse({
       ...input,
-      id: input.id ?? AnId.generate().value,
+      id: input.id ?? Id.generate().value,
       occurredAt: input.occurredAt ?? new Date(),
       metadata: input.metadata ?? {},
       data: input.data ?? {},
