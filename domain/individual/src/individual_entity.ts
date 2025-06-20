@@ -19,12 +19,10 @@ type IndividualEventCreate =
 
 export class Individual extends Entity<IndividualEventCreate> {
   #energy: EnergyVO;
-  #origin: string;
 
   constructor(input: { name: string; energy?: number; id?: unknown }) {
     const individualInput = { ...input, origin: 'individual' };
     super(individualInput);
-    this.#origin = individualInput.origin;
     this.#energy = new EnergyVO(individualInput.energy);
   }
 
@@ -52,10 +50,6 @@ export class Individual extends Entity<IndividualEventCreate> {
 
   get energy(): EnergyVO {
     return this.#energy;
-  }
-
-  get origin(): string {
-    return this.#origin;
   }
 
   static serialize(entity: Individual): string {

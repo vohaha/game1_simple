@@ -8,16 +8,16 @@ type IdValueType = z.infer<typeof IdValueSchema>;
 export abstract class Entity<
   TEntityEventCreate extends IEventCreate
 > extends EventAware<TEntityEventCreate> {
-  private readonly _id: IdValueType;
-  private _name = '';
+  readonly #id: IdValueType;
+  #name: string;
 
   constructor(input: { name: string; origin: string; id?: unknown }) {
     super(input);
-    this._name = input.name;
+    this.#name = input.name;
     if (input.id == null) {
-      this._id = Entity.generateId();
+      this.#id = Entity.generateId();
     } else if (Entity.validateId(input.id)) {
-      this._id = input.id as IdValueType;
+      this.#id = input.id as IdValueType;
     } else {
       throw new Error('invalid entity id');
     }
@@ -32,19 +32,15 @@ export abstract class Entity<
   }
 
   public get id() {
-    return this._id;
-  }
-
-  private set name(newName) {
-    this._name = newName;
+    return this.#id;
   }
 
   public get name() {
-    return this._name;
+    return this.#name;
   }
 
   public changeName(newName: string): void {
-    this.name = newName;
+    this.#name = newName;
   }
 
   public equals(otherEntity: unknown): boolean {
@@ -55,6 +51,6 @@ export abstract class Entity<
       return false;
     }
 
-    return this._id === otherEntity._id;
+    return this.#id === otherEntity.#id;
   }
 }
