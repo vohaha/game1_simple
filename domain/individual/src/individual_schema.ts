@@ -1,9 +1,9 @@
 import { EntitySchema } from '@game1/types';
+import { EnergyValueSchema } from './value-objects/index.ts';
 import { z } from 'zod/v4';
 
 export const IndividualSchema = EntitySchema.extend({
-  actionTokens: z.number().int().nonnegative(),
-  focus: z.number().int().min(0).max(100),
+  energy: EnergyValueSchema,
 });
 
 export type IndividualDTO = z.infer<typeof IndividualSchema>;

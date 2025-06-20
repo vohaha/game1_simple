@@ -1,5 +1,4 @@
-import { Individual } from '../entities/Individual.ts';
-import { Energy } from '../value-objects/Energy.ts';
+import { Individual } from './index.ts';
 
 export interface CreateIndividualProps {
   name: string;
@@ -9,11 +8,9 @@ export interface CreateIndividualProps {
 
 export class IndividualFactory {
   public static create(props: CreateIndividualProps): Individual {
-    const energy = new Energy(props.energy ?? Energy.DEFAULT);
-
     return new Individual({
       name: props.name,
-      energy,
+      energy: props.energy,
     });
   }
 }

@@ -5,7 +5,9 @@ export function App() {
     name: 'vh',
   });
   console.log(player);
-  return <pre>{JSON.stringify(player, null, 2)}</pre>;
+  player.energy.change(-1);
+  console.log(player.energy.value);
+  return <pre>{player.serialize()}</pre>;
 }
 
 export default App;

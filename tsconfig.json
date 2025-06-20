@@ -4,9 +4,6 @@
   "files": [],
   "references": [
     {
-      "path": "./domain/player"
-    },
-    {
       "path": "./domain/action_tokens"
     },
     {
@@ -29,6 +26,9 @@
     },
     {
       "path": "./domain/affordance"
+    },
+    {
+      "path": "./domain/individual"
     }
   ]
 }

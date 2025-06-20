@@ -1,31 +1,60 @@
-import { IEvent, IEventAware } from './index.ts';
+import { ITimestamp, Timestamp, TimestampSchema } from '../index.ts';
+import { IEvent, IEventAware, IEventCreate } from './index.ts';
 
-export abstract class Event implements IEvent {
+export class DomainEvent implements IEvent {
   readonly occurredAt;
-  readonly source;
+  readonly origin;
   readonly type;
   readonly payload;
 
   constructor(event: IEvent) {
     this.occurredAt = event.occurredAt;
-    this.source = event.source;
+    this.origin = event.origin;
     this.type = event.type;
     this.payload = event.payload;
   }
 }
 
-export abstract class EventAware implements IEventAware {
-  protected events: IEvent[] = [];
+class DomainEventFactory<TDomainEventCreate extends IEventCreate> {
+  #origin: string;
+  constructor(origin: string) {
+    this.#origin = origin;
+  }
+  create(eventCreate: TDomainEventCreate, occurredAt?: ITimestamp) {
+    const ts = TimestampSchema.safeParse(occurredAt);
+    return new DomainEvent({
+      origin: this.#origin,
+      type: `${this.#origin}:${eventCreate.type}`,
+      occurredAt: ts.success ? ts.data : Timestamp.now(),
+      payload: eventCreate.payload,
+    });
+  }
+}
 
-  addEvent(event: IEvent): void {
-    this.events.push(event);
+export abstract class EventAware<TDomainEventCreate extends IEventCreate>
+  implements IEventAware
+{
+  protected events: DomainEvent[] = [];
+  protected eventFactory;
+
+  constructor(input: { origin: string }) {
+    this.eventFactory = new DomainEventFactory(input.origin);
   }
 
-  getEvents(): IEvent[] {
+  public addEvent(createEvent: TDomainEventCreate): void {
+    this.events.push(
+      this.eventFactory.create({
+        type: createEvent.type,
+        payload: createEvent.payload,
+      })
+    );
+  }
+
+  public getEvents(): IEvent[] {
     return this.events;
   }
 
-  clearEvents(): void {
+  public clearEvents(): void {
     this.events = [];
   }
 }

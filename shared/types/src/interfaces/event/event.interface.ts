@@ -1,27 +1,31 @@
-import { TimestampSchema } from 'src/index.ts';
 import { z } from 'zod/v4';
+import { TimestampSchema } from '../time/time.interface.ts';
 
-const sourceSchema = z.string().nonempty();
-const typeSchema = z.string().nonempty();
+const OriginSchema = z.string().nonempty();
+const TypeSchema = z.string().nonempty();
 const separator = ':';
 
 export const EventSchema = z
   .object({
-    occurredAt: TimestampSchema.readonly(),
-    payload: z.object().required(),
-    source: sourceSchema,
-    type: z.templateLiteral([sourceSchema, separator, typeSchema]),
+    occurredAt: TimestampSchema,
+    payload: z.record(z.string(), z.unknown()),
+    origin: OriginSchema,
+    type: z.templateLiteral([OriginSchema, separator, TypeSchema]),
   })
   .refine((event) => {
-    const [eventSource] = event.type.split(separator);
-    if (eventSource !== event.source) return false;
+    const [origin] = event.type.split(separator);
+    if (origin !== event.origin) return false;
     return true;
   });
 
 export type IEvent = z.infer<typeof EventSchema>;
 
+export type IEventCreate = Pick<IEvent, 'payload'> & {
+  type: string;
+};
+
 export interface IEventAware {
-  addEvent(event: IEvent): void;
+  addEvent(createEvent: IEventCreate): void;
   getEvents(): IEvent[];
   clearEvents(): void;
 }

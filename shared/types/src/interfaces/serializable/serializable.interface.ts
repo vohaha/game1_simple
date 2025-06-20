@@ -1,4 +1,4 @@
-export interface ISerializable<T> {
+export interface ISerializable<T extends object = object> {
   serialize(): string;
-  deserialize(): T;
+  deserialize(data: string): T | Error;
 }

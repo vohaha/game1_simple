@@ -3,6 +3,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../domain/individual"
+    },
+    {
       "path": "./tsconfig.app.json"
     }
   ],

@@ -1,4 +1,4 @@
-import { Individual } from '../entities/Individual.ts';
+import { Individual } from './individual_entity.ts';
 
 export class IndividualDomainService {
   static isSameIndividual(params: {
