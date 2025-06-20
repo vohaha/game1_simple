@@ -1,11 +1,10 @@
 import { Energy } from '../value-objects/Energy.ts';
 import { Entity } from '@game1/types';
-import { IDomainEvent } from '@game1/events';
+import { DomainEventAware } from '@game1/events';
 
-export class Individual extends Entity {
+export class Individual extends Entity implements DomainEventAware {
   private _name: string;
   private _energy: Energy;
-  private _domainEvents: IDomainEvent[] = [];
 
   constructor(input: { name: string; energy: Energy; id?: unknown }) {
     super(input.id);
@@ -21,14 +20,6 @@ export class Individual extends Entity {
     return this._energy;
   }
 
-  get domainEvents(): IDomainEvent[] {
-    return this._domainEvents;
-  }
-
-  clearDomainEvents(): void {
-    this._domainEvents = [];
-  }
-
   changeName(newName: string): void {
     this._name = newName;
     // Example event can be added here, e.g. PlayerNameChanged
@@ -39,9 +30,5 @@ export class Individual extends Entity {
     this._energy = energy;
     // Example event can be added here, e.g. PlayerEnergyUpdated
     // this._domainEvents.push(new PlayerEnergyUpdated(this.id, energy));
-  }
-
-  protected addDomainEvent(event: IDomainEvent): void {
-    this._domainEvents.push(event);
   }
 }

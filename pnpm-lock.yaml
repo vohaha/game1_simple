@@ -132,6 +132,8 @@ importers:
 
   domain/action_tokens: {}
 
+  domain/affordance: {}
+
   domain/concentration: {}
 
   domain/deal_template: {}
@@ -143,6 +145,15 @@ importers:
         version: link:../../shared/types
 
   domain/individual:
+    devDependencies:
+      '@game1/events':
+        specifier: workspace:*
+        version: link:../events
+      '@game1/types':
+        specifier: workspace:*
+        version: link:../../shared/types
+
+  domain/product:
     devDependencies:
       '@game1/events':
         specifier: workspace:*

@@ -23,6 +23,12 @@
     },
     {
       "path": "./shared/types"
+    },
+    {
+      "path": "./domain/product"
+    },
+    {
+      "path": "./domain/affordance"
     }
   ]
 }

@@ -1,2 +1,3 @@
 export * from './IDomainEvent.ts';
-export * from './IEventBus.ts';
+export * from './IDomainEventBus.ts';
+export * from './IDomainEventAware.ts';

@@ -1,6 +1,6 @@
 import { IDomainEvent } from './IDomainEvent.ts';
 
-export interface IEventBus {
+export interface IDomainEventBus {
   publish(event: IDomainEvent): Promise<void>;
 
   publishMany(events: IDomainEvent[]): Promise<void>;

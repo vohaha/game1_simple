@@ -32,7 +32,9 @@
         "domain/concentration/*",
         "domain/deal_template/*",
         "domain/events/*",
-        "shared/types/*"
+        "shared/types/*",
+        "domain/product/*",
+        "domain/affordance/*"
       ]
     },
     {
@@ -43,7 +45,9 @@
         "domain/concentration/*",
         "domain/deal_template/*",
         "domain/events/*",
-        "shared/types/*"
+        "shared/types/*",
+        "domain/product/*",
+        "domain/affordance/*"
       ],
       "options": {
         "typecheck": {
