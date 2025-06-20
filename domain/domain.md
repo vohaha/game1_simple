@@ -44,7 +44,7 @@ Within each project folder, use this pattern:
 
 - **interfaces/**:
 
-  - Define ports (e.g. `IPlayerRepository`).
+  - Define ports (e.g. `IIndividualRepository`).
   - No implementation details.
 
 - **factories/**:
@@ -71,17 +71,6 @@ Within each project folder, use this pattern:
 - VOs are immutable; Entities manage their own invariants.
 - Use UPPER_SNAKE for constants.
 - Expose public API via `src/index.ts` only.
-
----
-
-## Example: player/src/index.ts
-
-```ts
-export * from './value-objects/PlayerId';
-export * from './entities/Player';
-export * from './interfaces/IPlayerRepository';
-export * from './factories/PlayerFactory';
-```
 
 ---
 

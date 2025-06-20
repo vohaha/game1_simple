@@ -3,6 +3,6 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@game1/player": "workspace:*"
+    "@game1/individual": "workspace:*"
   }
 }

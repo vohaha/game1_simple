@@ -7,7 +7,7 @@ export type IdType = z.infer<typeof IdSchema>;
 export class AnId {
   private readonly _value: IdType;
 
-  private constructor(value: IdType) {
+  private constructor(value: unknown) {
     this._value = IdSchema.parse(value);
   }
 
@@ -15,7 +15,7 @@ export class AnId {
     return new AnId(uuidv4());
   }
 
-  public static fromValue(value: string): AnId {
+  public static fromValue(value: unknown): AnId {
     return new AnId(value);
   }
 

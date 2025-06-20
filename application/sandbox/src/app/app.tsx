@@ -1,7 +1,7 @@
-import { PlayerFactory } from '@game1/player';
+import { IndividualFactory } from '@game1/individual';
 
 export function App() {
-  const player = PlayerFactory.create({
+  const player = IndividualFactory.create({
     name: 'vh',
   });
   console.log(player);

@@ -12,7 +12,7 @@ The game is based on a few timeless principles:
 
 - **Psychological Realism**: Every mechanic stems from how real people think, behave, and organize.
 - **Emergent Complexity**: Simple rules lead to rich, unpredictable behaviors over time.
-- **Player Agency**: Systems are built to amplify meaningful choices, not limit them.
+- **Individual Agency**: Systems are built to amplify meaningful choices, not limit them.
 - **Abstraction of Reality**: Features reflect the _why_, not the _what_, behind real-world systems.
 - **Natural Regulation**: Balancing and feedback loops are emergent and grounded in systemic friction, not imposed limitations.
 
@@ -20,8 +20,8 @@ The game is based on a few timeless principles:
 
 Game1 is not about winning — it’s about _becoming_. The systems simulate:
 
-- **Energy & Effort**: Players manage actions and rest in a world where energy is finite.
-- **Group Dynamics**: Players form groups to specialize, scale, and survive.
+- **Energy & Effort**: Individuals manage actions and rest in a world where energy is finite.
+- **Group Dynamics**: Individuals form groups to specialize, scale, and survive.
 - **Deal-Making**: Cooperation emerges through agreements with real trust dynamics.
 - **Production & Service**: Value is created through attention, focus, and skill.
 - **Temporal Rhythms**: Time matters. Rest, work, and biological preferences shape productivity.
@@ -40,7 +40,7 @@ Game1 is developed using Domain-Driven Design (DDD) to ensure that every part of
 • Each context maps directly to real-world analogies and is modeled from the inside out, not by data structures but by behaviors and rules.
 
 🧩 Tactical Building Blocks
-• Entities: Players, Groups, and Products have persistent identity and history.
+• Entities: Individual, Groups, and Products have persistent identity and history.
 • Value Objects: Concepts like Efficiency, Quality, and Action Capacity are immutable and behavior-rich — they encapsulate meaning, not just data.
 • Aggregates: Core integrity rules are enforced at the aggregate root — e.g., a Group governs access to its Memberships, not the other way around.
 • Domain Services: Behavior that doesn’t belong to a specific entity but expresses key domain logic lives here — such as validation of complex agreements or group coordination logic.

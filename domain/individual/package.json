@@ -1,5 +1,5 @@
 {
-  "name": "@game1/player",
+  "name": "@game1/individual",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -13,5 +13,9 @@
     },
     "./package.json": "./package.json"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "devDependencies": {
+    "@game1/types": "workspace:*",
+    "@game1/events": "workspace:*"
+  }
 }
