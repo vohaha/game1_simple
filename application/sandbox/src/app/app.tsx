@@ -1,4 +1,4 @@
-import { IndividualFactory } from '@game1/individual';
+import { IndividualFactory, Individual } from '@game1/individual';
 
 export function App() {
   const player = IndividualFactory.create({
@@ -7,7 +7,7 @@ export function App() {
   console.log(player);
   player.energy.change(-1);
   console.log(player.energy.value);
-  return <pre>{player.serialize()}</pre>;
+  return <pre>{Individual.serialize(player)}</pre>;
 }
 
 export default App;

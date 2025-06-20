@@ -1,20 +1,19 @@
 import { z } from 'zod/v4';
 import { v4 as uuidv4 } from 'uuid';
-import { EventAware, IEventAware, IEventCreate } from '../event/index.ts';
-import { IEntity } from './entity.interface.ts';
+import { EventAware, IEventCreate } from '../event/index.ts';
 
 const IdValueSchema = z.uuidv4();
 type IdValueType = z.infer<typeof IdValueSchema>;
 
-export abstract class Entity<TEntityEventCreate extends IEventCreate>
-  extends EventAware<TEntityEventCreate>
-  implements IEntity, IEventAware
-{
+export abstract class Entity<
+  TEntityEventCreate extends IEventCreate
+> extends EventAware<TEntityEventCreate> {
   private readonly _id: IdValueType;
-  public _name = '';
+  private _name = '';
 
-  constructor(input: { origin: string; id?: unknown }) {
+  constructor(input: { name: string; origin: string; id?: unknown }) {
     super(input);
+    this._name = input.name;
     if (input.id == null) {
       this._id = Entity.generateId();
     } else if (Entity.validateId(input.id)) {

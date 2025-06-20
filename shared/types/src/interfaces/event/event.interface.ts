@@ -23,9 +23,3 @@ export type IEvent = z.infer<typeof EventSchema>;
 export type IEventCreate = Pick<IEvent, 'payload'> & {
   type: string;
 };
-
-export interface IEventAware {
-  addEvent(createEvent: IEventCreate): void;
-  getEvents(): IEvent[];
-  clearEvents(): void;
-}

@@ -1,5 +1,5 @@
 import { ITimestamp, Timestamp, TimestampSchema } from '../index.ts';
-import { IEvent, IEventAware, IEventCreate } from './index.ts';
+import { IEvent, IEventCreate } from './index.ts';
 
 export class DomainEvent implements IEvent {
   readonly occurredAt;
@@ -31,9 +31,7 @@ class DomainEventFactory<TDomainEventCreate extends IEventCreate> {
   }
 }
 
-export abstract class EventAware<TDomainEventCreate extends IEventCreate>
-  implements IEventAware
-{
+export abstract class EventAware<TDomainEventCreate extends IEventCreate> {
   protected events: DomainEvent[] = [];
   protected eventFactory;
 
@@ -41,7 +39,7 @@ export abstract class EventAware<TDomainEventCreate extends IEventCreate>
     this.eventFactory = new DomainEventFactory(input.origin);
   }
 
-  public addEvent(createEvent: TDomainEventCreate): void {
+  protected addEvent(createEvent: TDomainEventCreate): void {
     this.events.push(
       this.eventFactory.create({
         type: createEvent.type,
@@ -50,11 +48,11 @@ export abstract class EventAware<TDomainEventCreate extends IEventCreate>
     );
   }
 
-  public getEvents(): IEvent[] {
+  protected getEvents(): IEvent[] {
     return this.events;
   }
 
-  public clearEvents(): void {
+  protected clearEvents(): void {
     this.events = [];
   }
 }

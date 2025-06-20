@@ -20,8 +20,9 @@ export class EnergyVO {
   public readonly value: EnergyValueType;
 
   constructor(value: unknown) {
-    if (EnergyValueSchema.safeParse(value).success) {
-      this.value = EnergyVO.clamp(value as EnergyValueType);
+    const validatedEnergyValue = EnergyValueSchema.safeParse(value);
+    if (validatedEnergyValue.success) {
+      this.value = EnergyVO.clamp(validatedEnergyValue.data as EnergyValueType);
     } else {
       this.value = EnergyVO.DEFAULT;
     }
