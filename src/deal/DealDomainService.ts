@@ -2,6 +2,7 @@
 // Used for operations involving multiple DealAggregates or cross-deal coordination logic
 
 import { DealAggregate } from './DealAggregate';
+import { DealEntity } from './DealEntity';
 import { DealTermVO } from './DealTermVO';
 
 export class DealDomainService {
@@ -15,7 +16,7 @@ export class DealDomainService {
       termsObj[term.key] = term.value;
     });
     // Creation of the deal entity is handled in aggregate, use factory/repo if persistence is required
-    const dealEntity = new (require('./DealEntity').DealEntity)(
+    const dealEntity = new DealEntity(
       DealDomainService.generateDealId(),
       partyIds,
       termsObj,
