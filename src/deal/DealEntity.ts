@@ -72,4 +72,15 @@ export class DealEntity {
       this.state = 'Broken';
     }
   }
+
+  getSnapshot() {
+    return {
+      id: this.id,
+      partyIds: [...this.partyIds],
+      terms: { ...this.terms },
+      createdAt: this.createdAt,
+      state: this.state,
+      verificationLog: [...this.verificationLog],
+    };
+  }
 }

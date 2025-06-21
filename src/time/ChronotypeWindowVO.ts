@@ -1,1 +1,3 @@
-export type ChronotypeWindow = string;
+export class ChronotypeWindow {
+  constructor() {}
+}

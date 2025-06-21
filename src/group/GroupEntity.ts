@@ -3,15 +3,9 @@
 export class GroupEntity {
   private readonly id: string;
   private name: string;
-
-  // Member individual IDs
   private members: string[];
-
-  // Roles mapped to member IDs (VO could be used here)
   private roles: Record<string, string>;
-
-  // Internal: Group properties such as cohesion, specialization, trust metrics (VOs/pure domain data)
-  private readonly properties: Record<string, unknown>;
+  private properties: Record<string, unknown>;
 
   constructor(
     id: string,
@@ -36,28 +30,63 @@ export class GroupEntity {
   }
 
   getMembers(): string[] {
-    return this.members;
+    return [...this.members];
   }
 
   getRoleForMember(memberId: string): string | undefined {
     return this.roles[memberId];
   }
 
-  getProperty(prop: string): unknown {
-    return this.properties[prop];
+  getAllRoles(): Record<string, string> {
+    return { ...this.roles };
+  }
+
+  getProperty(key: string): unknown {
+    return this.properties[key];
+  }
+
+  getAllProperties(): Record<string, unknown> {
+    return { ...this.properties };
   }
 
   addMember(memberId: string, role?: string): void {
     if (!this.members.includes(memberId)) {
       this.members.push(memberId);
-      if (role) {
-        this.roles[memberId] = role;
-      }
+    }
+    if (role) {
+      this.roles[memberId] = role;
     }
   }
 
   removeMember(memberId: string): void {
     this.members = this.members.filter((id) => id !== memberId);
     delete this.roles[memberId];
+  }
+
+  setRoleForMember(memberId: string, role: string): void {
+    if (this.members.includes(memberId)) {
+      this.roles[memberId] = role;
+    }
+    // TODO: Else, throw or handle error if needed
+  }
+
+  setProperty(key: string, value: unknown): void {
+    this.properties[key] = value;
+  }
+
+  getSnapshot(): {
+    id: string;
+    name: string;
+    members: string[];
+    roles: Record<string, string>;
+    properties: Record<string, unknown>;
+  } {
+    return {
+      id: this.id,
+      name: this.name,
+      members: [...this.members],
+      roles: { ...this.roles },
+      properties: { ...this.properties },
+    };
   }
 }

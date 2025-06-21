@@ -25,13 +25,24 @@ export class GroupAggregate {
     return this.groupEntity.getRoleForMember(memberId);
   }
 
+  getAllRoles(): Record<string, string> {
+    return this.groupEntity.getAllRoles();
+  }
+
   getProperty(key: string): unknown {
     return this.groupEntity.getProperty(key);
   }
 
-  // Add a group property (returns a new VO, but in practice would update entity state)
-  addProperty(property: GroupPropertyVO): void {
-    // Placeholder: property addition logic not implemented
+  getAllProperties(): Record<string, unknown> {
+    return this.groupEntity.getAllProperties();
+  }
+
+  setProperty(property: GroupPropertyVO): void {
+    this.groupEntity.setProperty(property.key, property.value);
+  }
+
+  setRoleForMember(memberId: string, role: string): void {
+    this.groupEntity.setRoleForMember(memberId, role);
   }
 
   // Add a group member, optionally with a role
@@ -42,5 +53,15 @@ export class GroupAggregate {
   // Remove a group member
   removeMember(memberId: string): void {
     this.groupEntity.removeMember(memberId);
+  }
+
+  getSnapshot(): {
+    id: string;
+    name: string;
+    members: string[];
+    roles: Record<string, string>;
+    properties: Record<string, unknown>;
+  } {
+    return this.groupEntity.getSnapshot();
   }
 }

@@ -42,4 +42,8 @@ export class DealAggregate {
   verifyClause(verifiedBy: string, passed: boolean, note?: string): void {
     this.dealEntity.verifyClause(verifiedBy, passed, note);
   }
+
+  getSnapshot() {
+    return this.dealEntity.getSnapshot();
+  }
 }
