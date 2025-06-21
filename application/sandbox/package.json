@@ -63,7 +63,7 @@
       }
     }
   },
-  "dependencies": {
+  "devDependencies": {
     "@game1/individual": "workspace:*"
   }
 }

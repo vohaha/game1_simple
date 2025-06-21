@@ -23,21 +23,14 @@ export class Individual extends Entity {
   constructor(input: { name: string; energy?: number; id?: unknown }) {
     super({ ...input, origin: 'individual' });
     this.#energy = new EnergyVO(input.energy);
-    const indiv = this;
-    this.registerAction('show_focus', 'defaultFocus', async () => {
-      indiv.#energy = indiv.#energy.spend(1);
-      return {
-        focusPayload: indiv.#energy.value,
-      };
-    });
+  }
+
+  protected performAction() {
+    this.#energy = this.#energy.spend(1);
   }
 
   public get energy() {
-    return this.#energy.value;
-  }
-
-  public isTired() {
-    return this.#energy.value < 50;
+    return this.#energy;
   }
 
   static serialize(entity: Individual): string {

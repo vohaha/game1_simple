@@ -1,23 +1,12 @@
-import Fastify from 'fastify';
-import { app } from './app/app';
+import { Individual } from '@game1/individual';
 
-const host = process.env.HOST ?? 'localhost';
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
-
-// Instantiate Fastify with some config
-const server = Fastify({
-  logger: true,
+const indiv = new Individual({
+  name: 'vh',
+  energy: 100,
 });
 
-// Register your application as a normal plugin.
-server.register(app);
-
-// Start listening.
-server.listen({ port, host }, (err) => {
-  if (err) {
-    server.log.error(err);
-    process.exit(1);
-  } else {
-    console.log(`[ ready ] http://${host}:${port}`);
-  }
-});
+console.log(indiv.energy.value);
+indiv.performAction();
+console.log(indiv.energy.value);
+indiv.performAction();
+console.log(indiv.energy.value);
