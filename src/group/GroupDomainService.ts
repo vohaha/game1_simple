@@ -1,4 +1,3 @@
-game1_simple/src/group/GroupDomainService.ts
 // Domain Service for the Group context
 // Used for operations involving multiple GroupAggregates or cross-group coordination logic
 
@@ -16,12 +15,12 @@ export class GroupDomainService {
   static splitGroup(
     group: GroupAggregate,
     memberIds1: string[],
-    memberIds2: string[]
+    memberIds2: string[],
   ): { group1Members: string[]; group2Members: string[] } {
     // Placeholder logic
     return {
       group1Members: memberIds1,
-      group2Members: memberIds2
+      group2Members: memberIds2,
     };
   }
 
@@ -29,7 +28,7 @@ export class GroupDomainService {
   static areGroupsCompatible(
     groupA: GroupAggregate,
     groupB: GroupAggregate,
-    propertyKey: string
+    propertyKey: string,
   ): boolean {
     const propA = groupA.getProperty(propertyKey);
     const propB = groupB.getProperty(propertyKey);
@@ -37,10 +36,7 @@ export class GroupDomainService {
   }
 
   // Calculate average property value across a set of groups (e.g., mean cohesion)
-  static averageGroupProperty(
-    groups: GroupAggregate[],
-    propertyKey: string
-  ): number | null {
+  static averageGroupProperty(groups: GroupAggregate[], propertyKey: string): number | null {
     const values = groups
       .map((g) => g.getProperty(propertyKey))
       .filter((v): v is number => typeof v === 'number');

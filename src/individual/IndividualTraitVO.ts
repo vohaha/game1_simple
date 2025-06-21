@@ -1,4 +1,3 @@
-game1_simple/src/individual/IndividualTraitVO.ts
 // Value Object encapsulating an immutable individual trait (e.g., personality, skill, cognitive capacity)
 
 export class IndividualTraitVO {
@@ -13,7 +12,6 @@ export class IndividualTraitVO {
   }
 
   equals(other: IndividualTraitVO): boolean {
-    return this.key === other.key &&
-      JSON.stringify(this.value) === JSON.stringify(other.value);
+    return this.key === other.key && JSON.stringify(this.value) === JSON.stringify(other.value);
   }
 }

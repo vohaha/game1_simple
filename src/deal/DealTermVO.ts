@@ -1,4 +1,3 @@
-game1_simple/src/deal/DealTermVO.ts
 // Value Object representing an immutable deal term or clause
 
 export class DealTermVO {
@@ -13,7 +12,6 @@ export class DealTermVO {
   }
 
   equals(other: DealTermVO): boolean {
-    return this.key === other.key &&
-      JSON.stringify(this.value) === JSON.stringify(other.value);
+    return this.key === other.key && JSON.stringify(this.value) === JSON.stringify(other.value);
   }
 }

@@ -1,4 +1,3 @@
-game1_simple/src/energy/EnergyEntity.ts
 export class EnergyEntity {
   // Entity ID
   private readonly id: string;
@@ -15,12 +14,7 @@ export class EnergyEntity {
   // Internal: last energy update timestamp
   private lastUpdated: number;
 
-  constructor(
-    id: string,
-    energy: number,
-    maxEnergy: number,
-    chronotypeWindow: unknown
-  ) {
+  constructor(id: string, energy: number, maxEnergy: number, chronotypeWindow: unknown) {
     this.id = id;
     this.energy = energy;
     this.maxEnergy = maxEnergy;

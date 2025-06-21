@@ -1,4 +1,3 @@
-game1_simple/src/energy/EnergyValueObject.ts
 // Value Object representing an amount of energy, always immutable
 
 export class EnergyValueObject {
@@ -18,8 +17,7 @@ export class EnergyValueObject {
   }
 
   subtract(other: EnergyValueObject): EnergyValueObject {
-    if (other.amount > this.amount)
-      throw new Error('Cannot subtract more energy than available');
+    if (other.amount > this.amount) throw new Error('Cannot subtract more energy than available');
     return new EnergyValueObject(this.amount - other.amount);
   }
 

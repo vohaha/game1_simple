@@ -1,4 +1,3 @@
-game1_simple/src/deal/DealAggregate.ts
 import { DealEntity } from './DealEntity';
 import { DealTermVO } from './DealTermVO';
 

@@ -1,4 +1,3 @@
-game1_simple/src/deal/DealEntity.ts
 // Entity representing a formalized deal or agreement between two or more parties
 
 export class DealEntity {
@@ -11,13 +10,18 @@ export class DealEntity {
   private state: 'Active' | 'Fulfilled' | 'Broken';
 
   // Verification history, showing fulfilled or broken clauses
-  private verificationLog: Array<{ timestamp: Date; verifiedBy: string; passed: boolean; note?: string }>;
+  private verificationLog: Array<{
+    timestamp: Date;
+    verifiedBy: string;
+    passed: boolean;
+    note?: string;
+  }>;
 
   constructor(
     id: string,
     partyIds: string[],
     terms: Record<string, unknown>,
-    createdAt: Date = new Date()
+    createdAt: Date = new Date(),
   ) {
     this.id = id;
     this.partyIds = [...partyIds];

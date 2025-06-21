@@ -1,4 +1,3 @@
-game1_simple/src/individual/IndividualEntity.ts
 // Entity representing a single individual in the simulation
 
 export class IndividualEntity {
@@ -15,7 +14,7 @@ export class IndividualEntity {
     id: string,
     name: string,
     traits: Record<string, unknown>,
-    state: Record<string, unknown>
+    state: Record<string, unknown>,
   ) {
     this.id = id;
     this.name = name;

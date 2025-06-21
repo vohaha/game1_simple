@@ -1,4 +1,3 @@
-game1_simple/src/group/GroupEntity.ts
 // Entity representing a group or collective in the simulation
 
 export class GroupEntity {
@@ -19,7 +18,7 @@ export class GroupEntity {
     name: string,
     members: string[],
     roles: Record<string, string>,
-    properties: Record<string, unknown>
+    properties: Record<string, unknown>,
   ) {
     this.id = id;
     this.name = name;

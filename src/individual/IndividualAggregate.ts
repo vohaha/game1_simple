@@ -1,4 +1,3 @@
-game1_simple/src/individual/IndividualAggregate.ts
 import { IndividualEntity } from './IndividualEntity';
 import { IndividualTraitVO } from './IndividualTraitVO';
 

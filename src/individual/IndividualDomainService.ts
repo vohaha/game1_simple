@@ -1,4 +1,3 @@
-game1_simple/src/individual/IndividualDomainService.ts
 // Domain Service for Individual context
 // Used to perform operations involving multiple IndividualAggregates or cross-cutting identity/trait logic
 
@@ -10,7 +9,7 @@ export class IndividualDomainService {
   static areTraitsCompatible(
     indA: IndividualAggregate,
     indB: IndividualAggregate,
-    traitKey: string
+    traitKey: string,
   ): boolean {
     const traitA = indA.getTrait(traitKey);
     const traitB = indB.getTrait(traitKey);
@@ -21,13 +20,11 @@ export class IndividualDomainService {
   static calculateSimilarityScore(
     indA: IndividualAggregate,
     indB: IndividualAggregate,
-    traitKeys: string[]
+    traitKeys: string[],
   ): number {
     let score = 0;
     traitKeys.forEach((key) => {
-      if (
-        JSON.stringify(indA.getTrait(key)) === JSON.stringify(indB.getTrait(key))
-      ) {
+      if (JSON.stringify(indA.getTrait(key)) === JSON.stringify(indB.getTrait(key))) {
         score += 1;
       }
     });
@@ -38,7 +35,7 @@ export class IndividualDomainService {
   static transferKnowledge(
     from: IndividualAggregate,
     to: IndividualAggregate,
-    trait: IndividualTraitVO
+    trait: IndividualTraitVO,
   ): boolean {
     // Placeholder: In full implementation, would validate preconditions
     to.addTrait(trait);

@@ -1,4 +1,3 @@
-game1_simple/src/deal/DealDomainService.ts
 // Domain Service for the Deal context
 // Used for operations involving multiple DealAggregates or cross-deal coordination logic
 
@@ -7,13 +6,10 @@ import { DealTermVO } from './DealTermVO';
 
 export class DealDomainService {
   // Example: Negotiate a new deal from a set of party IDs and terms
-  static negotiateDeal(
-    partyIds: string[],
-    terms: DealTermVO[]
-  ): DealAggregate {
+  static negotiateDeal(partyIds: string[], terms: DealTermVO[]): DealAggregate {
     // Placeholder: In a full implementation, negotiation logic would include behavioral checks
     const termsObj: Record<string, unknown> = {};
-    terms.forEach(term => {
+    terms.forEach((term) => {
       termsObj[term.key] = term.value;
     });
     // Actual creation of the deal entity would typically be handled by a repository/factory
@@ -21,7 +17,7 @@ export class DealDomainService {
       DealDomainService.generateDealId(),
       partyIds,
       termsObj,
-      new Date()
+      new Date(),
     );
     return new DealAggregate(dealEntity);
   }
@@ -34,22 +30,13 @@ export class DealDomainService {
   }
 
   // Example: Resolve a dispute on a deal (could apply reputation debuffs, not shown)
-  static resolveDispute(
-    deal: DealAggregate,
-    byPartyId: string,
-    note?: string
-  ): void {
+  static resolveDispute(deal: DealAggregate, byPartyId: string, note?: string): void {
     // Placeholder: In a full implementation this would look up dispute mechanisms
     deal.verifyClause(byPartyId, false, note);
   }
 
   // Utility to generate a unique deal ID (stub)
   static generateDealId(): string {
-    return (
-      'deal_' +
-      Math.random().toString(36).substr(2, 9) +
-      '_' +
-      Date.now().toString(36)
-    );
+    return 'deal_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now().toString(36);
   }
 }

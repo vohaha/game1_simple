@@ -1,4 +1,3 @@
-game1_simple/src/group/GroupAggregate.ts
 import { GroupEntity } from './GroupEntity';
 import { GroupPropertyVO } from './GroupPropertyVO';
 

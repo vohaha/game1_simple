@@ -1,4 +1,3 @@
-game1_simple/src/group/GroupPropertyVO.ts
 // Value Object representing an immutable group property (e.g., cohesion, specialization, trust metrics)
 
 export class GroupPropertyVO {
@@ -13,7 +12,6 @@ export class GroupPropertyVO {
   }
 
   equals(other: GroupPropertyVO): boolean {
-    return this.key === other.key &&
-      JSON.stringify(this.value) === JSON.stringify(other.value);
+    return this.key === other.key && JSON.stringify(this.value) === JSON.stringify(other.value);
   }
 }
