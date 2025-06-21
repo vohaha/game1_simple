@@ -38,7 +38,7 @@ export class IndividualDomainService {
     trait: IndividualTraitVO,
   ): boolean {
     // Placeholder: In full implementation, would validate preconditions
-    to.addTrait(trait);
+    to.setTrait(trait);
     return true;
   }
 }
