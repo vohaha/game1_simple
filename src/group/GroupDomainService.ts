@@ -1,30 +1,40 @@
-// Domain Service for the Group context
-// Used for operations involving multiple GroupAggregates or cross-group coordination logic
+// Domain Service for the Group context.
+// Used for operations involving multiple GroupAggregates or cross-group coordination logic.
 
 import { GroupAggregate } from './GroupAggregate';
 import { GroupPropertyVO } from './GroupPropertyVO';
 
 export class GroupDomainService {
-  // Example: Form an alliance between two groups (could be modeled as a higher-level VO or Aggregate)
+  /**
+   * Forms an alliance between two groups.
+   * TODO: Implement alliance creation, trust evaluation, and inter-group invariant enforcement.
+   */
   static formAlliance(groupA: GroupAggregate, groupB: GroupAggregate): boolean {
-    // Placeholder: In full version, establish trust/cooperation properties and possibly create a new alliance entity
+    // TODO: Create alliance aggregate/entity with appropriate group relationship properties.
+    // This may emit cross-context alliance events.
     return true;
   }
 
-  // Example: Split a group into subgroups (returns group IDs for new groups)
+  /**
+   * Splits a group into two subgroups by member lists.
+   * TODO: Implement actual group splitting, membership transfer, and publish domain events.
+   */
   static splitGroup(
     group: GroupAggregate,
     memberIds1: string[],
     memberIds2: string[],
   ): { group1Members: string[]; group2Members: string[] } {
-    // Placeholder logic
+    // TODO: Implement real group split logic, handling membership, role, and property replication.
     return {
       group1Members: memberIds1,
       group2Members: memberIds2,
     };
   }
 
-  // Example: Evaluate compatibility of merging two groups based on properties
+  /**
+   * Evaluates whether two groups are compatible for merging based on a given property.
+   * TODO: Implement compatibility checks on all relevant group properties, not only basic equality.
+   */
   static areGroupsCompatible(
     groupA: GroupAggregate,
     groupB: GroupAggregate,
@@ -35,7 +45,9 @@ export class GroupDomainService {
     return JSON.stringify(propA) === JSON.stringify(propB);
   }
 
-  // Calculate average property value across a set of groups (e.g., mean cohesion)
+  /**
+   * Calculates average value of a group property across a set of groups.
+   */
   static averageGroupProperty(groups: GroupAggregate[], propertyKey: string): number | null {
     const values = groups
       .map((g) => g.getProperty(propertyKey))

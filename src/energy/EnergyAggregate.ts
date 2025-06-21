@@ -1,6 +1,8 @@
 import { IEnergyAggregate } from '../interfaces/IEnergyAggregate';
 import { IEnergyEntity } from '../interfaces/IEnergyEntity';
 import { EnergyValueObject } from './EnergyValueObject';
+import { domainEventBus } from '../integration/DomainEventBus';
+import { EnergySpentEvent, EnergyRegeneratedEvent } from '../shared/events/DomainEvent';
 
 // The aggregate root for energy-related operations within a bounded context.
 // Coordinates and enforces invariants for EnergyEntity and related value objects/services.
@@ -25,8 +27,18 @@ export class EnergyAggregate implements IEnergyAggregate {
    */
   spendEnergy(vo: EnergyValueObject): boolean {
     if (vo.amount <= 0) return false;
-    // TODO: Add domain event publishing for spend if needed.
-    return this.energyEntity.spend(vo.amount);
+    const success = this.energyEntity.spend(vo.amount);
+    if (success) {
+      const event: EnergySpentEvent = {
+        eventType: 'EnergySpent',
+        context: 'Energy',
+        aggregateId: this.getId(),
+        timestamp: Date.now(),
+        amount: vo.amount,
+      };
+      domainEventBus.publish(event);
+    }
+    return success;
   }
 
   /**
@@ -36,6 +48,14 @@ export class EnergyAggregate implements IEnergyAggregate {
     if (vo.amount <= 0) return;
     // TODO: Enforce circadian, trait- or event-driven regeneration logic.
     this.energyEntity.regenerate(vo.amount);
+    const event: EnergyRegeneratedEvent = {
+      eventType: 'EnergyRegenerated',
+      context: 'Energy',
+      aggregateId: this.getId(),
+      timestamp: Date.now(),
+      amount: vo.amount,
+    };
+    domainEventBus.publish(event);
   }
 
   /**
@@ -45,7 +65,8 @@ export class EnergyAggregate implements IEnergyAggregate {
     return this.energyEntity.getSnapshot();
   }
 
-  // TODO: Implement scheduling hooks with the Time System for automatic regeneration.
-  // TODO: Integrate cross-context triggers for market/deal actions that require energy.
+  // TODO: Integrate with the Time System and ChronotypeWindowVO to schedule automatic energy regeneration
+  //       using circadian event triggers. Production logic must invoke regeneration respecting time windows,
+  //       traits and global events. Hook into event bus for cross-context triggers (market, deal).
   // TODO: Support transactional invariants as required by application services.
 }

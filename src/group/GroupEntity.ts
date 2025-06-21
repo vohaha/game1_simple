@@ -1,5 +1,8 @@
 // Entity representing a group or collective in the simulation
 
+import { domainEventBus } from '../integration/DomainEventBus';
+import { GroupMembershipChangedEvent } from '../shared/events/DomainEvent';
+
 export class GroupEntity {
   private readonly id: string;
   private name: string;
@@ -11,8 +14,8 @@ export class GroupEntity {
     id: string,
     name: string,
     members: string[],
-    roles: Record<string, string>,
-    properties: Record<string, unknown>,
+    roles: Record<string, string> = {},
+    properties: Record<string, unknown> = {},
   ) {
     this.id = id;
     this.name = name;
@@ -52,9 +55,19 @@ export class GroupEntity {
   addMember(memberId: string, role?: string): void {
     if (!this.members.includes(memberId)) {
       this.members.push(memberId);
-    }
-    if (role) {
-      this.roles[memberId] = role;
+      if (role) {
+        this.roles[memberId] = role;
+      }
+      domainEventBus.publish({
+        eventType: 'GroupMembershipChanged',
+        context: 'Group',
+        aggregateId: this.id,
+        timestamp: Date.now(),
+        groupId: this.id,
+        memberId,
+        action: 'added',
+        role,
+      } satisfies GroupMembershipChangedEvent);
     }
   }
 
@@ -66,6 +79,17 @@ export class GroupEntity {
   setRoleForMember(memberId: string, role: string): void {
     if (this.members.includes(memberId)) {
       this.roles[memberId] = role;
+      // Treat as a membership change event if role set.
+      domainEventBus.publish({
+        eventType: 'GroupMembershipChanged',
+        context: 'Group',
+        aggregateId: this.id,
+        timestamp: Date.now(),
+        groupId: this.id,
+        memberId,
+        action: 'added',
+        role,
+      } as GroupMembershipChangedEvent);
     }
     // TODO: Else, throw or handle error if needed
   }

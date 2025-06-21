@@ -23,6 +23,9 @@ export type ProductSnapshot = {
   metadata?: Record<string, unknown>;
 };
 
+import { domainEventBus } from '../integration/DomainEventBus';
+import { ProductCreatedEvent, ProductStateChangedEvent } from '../shared/events/DomainEvent';
+
 export class ProductEntity {
   private readonly id: string;
   private readonly name: string;
@@ -53,6 +56,16 @@ export class ProductEntity {
     this.metadata = props.metadata;
     this.createdAt = props.createdAt ?? new Date();
     this.state = ProductState.Created;
+    domainEventBus.publish({
+      eventType: 'ProductCreated',
+      context: 'Production',
+      aggregateId: this.id,
+      timestamp: Date.now(),
+      productId: this.id,
+      ownerType: this.ownerType,
+      ownerId: this.ownerId,
+      productType: this.productType,
+    } as ProductCreatedEvent);
   }
 
   getId(): string {
@@ -93,7 +106,17 @@ export class ProductEntity {
 
   setState(newState: ProductState) {
     // TODO: Add transition validation if domain requires
+    const oldState = this.state;
     this.state = newState;
+    domainEventBus.publish({
+      eventType: 'ProductStateChanged',
+      context: 'Production',
+      aggregateId: this.id,
+      timestamp: Date.now(),
+      productId: this.id,
+      oldState: oldState,
+      newState: newState,
+    } as ProductStateChangedEvent);
   }
 
   updateValue(newValue: number) {

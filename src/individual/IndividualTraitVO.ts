@@ -1,10 +1,7 @@
 // Value Object encapsulating an immutable individual trait
 // Add new trait types and value validation as needed for your domain
 
-// TODO: Move base VO interface to src/shared if sharing between contexts.
-export interface ValueObject<T> {
-  equals(other: T): boolean;
-}
+import { ValueObject } from '../shared/ValueObject';
 
 export type TraitType = 'personality' | 'skill' | 'cognitive' | 'physical'; // Extend as needed
 

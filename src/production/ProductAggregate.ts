@@ -51,11 +51,13 @@ export class ProductAggregate implements IProductAggregate {
 
   setState(newState: ProductState): void {
     // TODO: Enforce domain invariants for state transitions (e.g., cannot move to completed before in_review)
+    //       Implement transaction/event contract if state affects other contexts.
     this.productEntity.setState(newState);
   }
 
   updateValue(newValue: number): void {
-    // TODO: Enforce value invariants (eg. allowed range) as needed
+    // TODO: Enforce value invariants (e.g., allowed range) here.
+    //       Trigger value change events if required for cross-context coordination.
     this.productEntity.updateValue(newValue);
   }
 
@@ -63,5 +65,6 @@ export class ProductAggregate implements IProductAggregate {
     return this.productEntity.getSnapshot();
   }
 
-  // TODO: Add coordination for workflow events, review/approval cascade, or assignment as domain evolves
+  // TODO: Implement workflow transitions, review/approval cascades, and workflow event publishing in production.
+  //       All value/state transitions should be validated and be ready for event-driven integration.
 }

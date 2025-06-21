@@ -53,9 +53,12 @@ export class EnergyEntity implements IEnergyEntity {
     this.lastUpdated = Date.now();
   }
 
-  // TODO: Implement circadian-based auto-regeneration using chronotypeWindow VOs and a Time System interface
+  // TODO: Integrate with Time System and ChronotypeWindowVO for circadian rhythm-driven regeneration.
+  //       This requires registering with the time system's scheduler, and using the individual's chronotype data
+  //       to determine optimal regeneration windows and apply debuffs/buffs accordingly.
 
-  // TODO: Integrate event sourcing or domain events for energy state changes
+  // TODO: Publish EnergySpentEvent and EnergyRegeneratedEvent (see EnergyAggregate).
+  //       For event sourcing, persist all energy state changes as events.
 
-  // TODO: Define and use a proper Domain Exception/Error system for failed operations
+  // TODO: Define and use a production-grade Domain Exception/Error system for failed operations and invariants.
 }

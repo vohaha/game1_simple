@@ -5,14 +5,16 @@ import { DealAggregate } from './DealAggregate';
 import { DealTermVO } from './DealTermVO';
 
 export class DealDomainService {
-  // Example: Negotiate a new deal from a set of party IDs and terms
+  /**
+   * Negotiate a new deal from a set of party IDs and terms.
+   * TODO: Implement behavioral, reputational, and cross-context negotiation checks.
+   */
   static negotiateDeal(partyIds: string[], terms: DealTermVO[]): DealAggregate {
-    // Placeholder: In a full implementation, negotiation logic would include behavioral checks
     const termsObj: Record<string, unknown> = {};
     terms.forEach((term) => {
       termsObj[term.key] = term.value;
     });
-    // Actual creation of the deal entity would typically be handled by a repository/factory
+    // Creation of the deal entity is handled in aggregate, use factory/repo if persistence is required
     const dealEntity = new (require('./DealEntity').DealEntity)(
       DealDomainService.generateDealId(),
       partyIds,
@@ -22,20 +24,25 @@ export class DealDomainService {
     return new DealAggregate(dealEntity);
   }
 
-  // Example: Review compliance of all party obligations for an active deal
+  /**
+   * Reviews compliance of all party obligations for an active deal.
+   * TODO: Implement actual compliance logic and verification contracts.
+   */
   static reviewCompliance(deal: DealAggregate): boolean {
-    // Placeholder: Checks for fulfillment of deal terms, correctness, etc
-    // Always returns true for now
     return deal.getState() === 'Fulfilled';
   }
 
-  // Example: Resolve a dispute on a deal (could apply reputation debuffs, not shown)
+  /**
+   * Resolve a dispute on a deal. Applies penalties or dispute mechanisms.
+   * TODO: Integrate with reputation, penalty, or arbitration systems.
+   */
   static resolveDispute(deal: DealAggregate, byPartyId: string, note?: string): void {
-    // Placeholder: In a full implementation this would look up dispute mechanisms
     deal.verifyClause(byPartyId, false, note);
   }
 
-  // Utility to generate a unique deal ID (stub)
+  /**
+   * Utility to generate a unique deal ID.
+   */
   static generateDealId(): string {
     return 'deal_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now().toString(36);
   }

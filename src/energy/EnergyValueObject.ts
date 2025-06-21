@@ -1,12 +1,12 @@
 // Value Object representing an immutable amount of energy.
-//
 // Enforces value semantics—two instances with the same amount are equal.
 // Use this for parameters, return values, and comparisons, not for Entity state.
 //
 // TODO: Extend with energy "type" (e.g., physical, mental) if sub-typing becomes relevant.
-// TODO: Connect with shared ValueObject interface for infrastructure-agnostic value equality.
 
-export class EnergyValueObject {
+import { ValueObject } from '../shared/ValueObject';
+
+export class EnergyValueObject implements ValueObject<EnergyValueObject> {
   readonly amount: number;
 
   constructor(amount: number) {
@@ -15,6 +15,10 @@ export class EnergyValueObject {
     }
     this.amount = amount;
     Object.freeze(this);
+  }
+
+  equals(other: EnergyValueObject): boolean {
+    return other instanceof EnergyValueObject && this.amount === other.amount;
   }
 
   isZero(): boolean {
@@ -30,9 +34,5 @@ export class EnergyValueObject {
       throw new Error('Cannot subtract more energy than available');
     }
     return new EnergyValueObject(this.amount - other.amount);
-  }
-
-  equals(other: EnergyValueObject): boolean {
-    return other instanceof EnergyValueObject && this.amount === other.amount;
   }
 }

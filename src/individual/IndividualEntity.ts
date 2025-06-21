@@ -1,14 +1,17 @@
 import { IIndividualEntity, IndividualSnapshot } from '../interfaces/IIndividualEntity';
 import { IndividualTraitVO } from './IndividualTraitVO';
+import { domainEventBus } from '../integration/DomainEventBus';
+import { TraitChangedEvent } from '../shared/events/DomainEvent';
 
 /**
  * Entity representing a simulated individual.
- * All state-changing operations should go through the aggregate.
+ * All state-changing operations go through the aggregate for invariants.
  *
- * Encapsulates core identity, immutable and dynamic traits, and state.
+ * Encapsulates unique identity, immutable traits, dynamic psychological/physiological state.
  *
- * TODO: Enforce invariants for trait assignment and mutation via dedicated methods.
- * TODO: Integrate psychological/behavioral state modeling.
+ * TODO: All mutators must enforce domain invariants (trait validity, mutation constraints).
+ * TODO: Methods must emit events using DomainEventBus for observability and integration.
+ * TODO: Integrate explicit behavioral/psychological state, aging, and locking mechanisms.
  */
 export class IndividualEntity implements IIndividualEntity {
   private readonly id: string;
@@ -24,9 +27,11 @@ export class IndividualEntity implements IIndividualEntity {
   }) {
     this.id = props.id;
     this.name = props.name;
-    this.traits = new Map();
-    (props.traits || []).forEach((trait) => this.traits.set(trait.key, trait));
-    this.state = props.state ? new Map(props.state) : new Map();
+    this.traits = new Map<string, IndividualTraitVO>();
+    if (props.traits) {
+      props.traits.forEach((trait) => this.traits.set(trait.key, trait));
+    }
+    this.state = props.state ?? new Map<string, unknown>();
   }
 
   getId(): string {
@@ -49,36 +54,41 @@ export class IndividualEntity implements IIndividualEntity {
     return this.state.get(key);
   }
 
-  /**
-   * Directly sets a trait value.
-   * Should only be called from the Aggregate after invariants are enforced.
-   * @internal
-   */
   setTrait(vo: IndividualTraitVO): void {
-    // TODO: Enforce domain invariants and trait addition/removal rules.
+    const prev = this.traits.get(vo.key);
+    // TODO: Enforce trait addition/removal invariants and authorizations for this change.
     this.traits.set(vo.key, vo);
+    domainEventBus.publish({
+      eventType: 'TraitChanged',
+      context: 'Individual',
+      aggregateId: this.getId(),
+      timestamp: Date.now(),
+      traitKey: vo.key,
+      oldValue: prev?.value,
+      newValue: vo.value,
+      // Optionally: changeReason for provenance (to be injected from aggregate/service if needed)
+    } satisfies TraitChangedEvent);
   }
 
-  /**
-   * Updates the dynamic psychological/physical state.
-   * Should only be called via aggregate methods.
-   * @internal
-   */
   setState(key: string, value: unknown): void {
-    // TODO: Define valid state keys and rules.
+    // TODO: Enforce valid state keys, type constraints, and domain logic for state transitions.
     this.state.set(key, value);
+    // TODO: Emit an event if state transitions are relevant for integration.
   }
 
   getSnapshot(): IndividualSnapshot {
     return {
       id: this.id,
       name: this.name,
-      traits: this.getAllTraits().map((trait) => ({ key: trait.key, value: trait.value })),
+      traits: Array.from(this.traits.entries()).map(([key, trait]) => ({
+        key: trait.key,
+        value: trait.value,
+      })),
       state: Object.fromEntries(this.state.entries()),
     };
   }
 
-  // TODO: Model trait lock, evolution, aging, and other psychological phenomena.
+  // TODO: Implement trait locking, controlled evolution, aging, and related psychological phenomena.
 
-  // TODO: Integrate event sourcing hooks if required.
+  // TODO: Integrate event sourcing (record all mutative actions for replay/audit).
 }

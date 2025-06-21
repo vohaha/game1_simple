@@ -1,11 +1,14 @@
-// Domain Service for Individual context
-// Used to perform operations involving multiple IndividualAggregates or cross-cutting identity/trait logic
+// Domain Service for Individual context.
+// Used to perform operations involving multiple IndividualAggregates or cross-cutting identity/trait logic.
 
 import { IndividualAggregate } from './IndividualAggregate';
 import { IndividualTraitVO } from './IndividualTraitVO';
 
 export class IndividualDomainService {
-  // Compare two individuals' specific traits for compatibility (psychological realism)
+  /**
+   * Compares two individuals' specific traits for compatibility (psychological realism).
+   * TODO: Consider domain-driven logic for advanced trait compatibility at type and value-object level.
+   */
   static areTraitsCompatible(
     indA: IndividualAggregate,
     indB: IndividualAggregate,
@@ -16,7 +19,10 @@ export class IndividualDomainService {
     return JSON.stringify(traitA) === JSON.stringify(traitB);
   }
 
-  // Example: Calculate similarity score across all traits (basic behavioral/identity similarity)
+  /**
+   * Calculates similarity score across given trait keys.
+   * TODO: Refine to use domain rules (weighted traits, psychological spectra, etc.).
+   */
   static calculateSimilarityScore(
     indA: IndividualAggregate,
     indB: IndividualAggregate,
@@ -31,13 +37,16 @@ export class IndividualDomainService {
     return score / traitKeys.length;
   }
 
-  // Example: Transfer "knowledge" trait between individuals (could cost energy, require trust, etc)
+  /**
+   * Transfers a "knowledge" or other transferable trait.
+   * TODO: Enforce preconditions: trust, cost (energy), and relevant event publishing to downstream contexts.
+   */
   static transferKnowledge(
     from: IndividualAggregate,
     to: IndividualAggregate,
     trait: IndividualTraitVO,
   ): boolean {
-    // Placeholder: In full implementation, would validate preconditions
+    // TODO: Enforce trait transfer invariants before mutation—see game rules on transfer, trust, and cost.
     to.setTrait(trait);
     return true;
   }

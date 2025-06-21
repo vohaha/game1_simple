@@ -4,6 +4,8 @@ import { DealTermVO } from '../deal/DealTermVO';
 /**
  * Interface for the DealAggregate - aggregate root for the Deal context in Game1.
  * Orchestrates formal agreements, obligation enforcement, verification, reputation influence, and life-cycle events.
+ * All mutating operations should ensure aggregate consistency and emit relevant events via DomainEventBus
+ * for cross-context integration (see shared/events/DomainEvent.ts and integration/DomainEventBus.ts).
  */
 export interface IDealAggregate {
   getId(): string;
@@ -21,25 +23,29 @@ export interface IDealAggregate {
   getSnapshot(): DealSnapshot;
 
   /**
-   * Add a deal term (immutable after deal is active). Should only be used during negotiation.
+   * Adds a deal term (immutable after deal is active).
+   * Should only be used during negotiation. Emits a term-related event if required by integration policy.
    */
   addTerm(term: DealTermVO): void;
 
   /**
-   * Verify a specific deal clause by an actor; will update verification log and potentially mark deal as Fulfilled or Broken.
+   * Verifies a specific deal clause by an actor; updates verification log and may mark deal as Fulfilled or Broken.
+   * Upon fulfillment or breach, MUST emit DealFulfilledEvent or DealBrokenEvent via DomainEventBus.
    */
   verifyClause(verifiedBy: string, passed: boolean, note?: string): void;
 
   /**
-   * Cancel or break the deal preemptively if allowed by terms. Returns true if successful.
+   * Cancels or breaks the deal preemptively if allowed by terms. Returns true if successful.
+   * Emits event if cancellation or penalty triggers integration.
    */
   cancelDeal(reason: string): boolean;
 
   /**
-   * Evaluate if all terms are currently fulfilled, update state accordingly.
+   * Evaluates if all terms are currently fulfilled, updates state accordingly.
+   * If state changes as a result, triggers the appropriate fulfillment/break event.
    */
   evaluateFulfillment(): boolean;
 
-  // TODO: Add methods for renegotiation, expiration, dispute resolution, and penalty calculation.
-  // TODO: Integrate event publishing and cross-context reputation signaling upon fulfillment/breach.
+  // TODO: Add methods for renegotiation, expiration, dispute resolution, penalty calculation, and their required event publishing.
+  // TODO: All aggregate invariants and state transitions should emit events for observability and integration with other bounded contexts, e.g., cross-context reputation signaling and trust adjustment.
 }
