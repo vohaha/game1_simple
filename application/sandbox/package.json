@@ -2,6 +2,19 @@
   "name": "@game1/sandbox",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "development": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
   "nx": {
     "targets": {
       "build": {
@@ -9,61 +22,17 @@
         "outputs": [
           "{options.outputPath}"
         ],
-        "defaultConfiguration": "production",
         "options": {
-          "platform": "node",
           "outputPath": "application/sandbox/dist",
+          "main": "application/sandbox/src/index.ts",
+          "tsConfig": "application/sandbox/tsconfig.lib.json",
           "format": [
-            "cjs"
+            "esm"
           ],
-          "bundle": false,
-          "main": "application/sandbox/src/main.ts",
-          "tsConfig": "application/sandbox/tsconfig.app.json",
-          "assets": [
-            "application/sandbox/src/assets"
-          ],
-          "esbuildOptions": {
-            "sourcemap": true,
-            "outExtension": {
-              ".js": ".js"
-            }
-          }
-        },
-        "configurations": {
-          "development": {},
-          "production": {
-            "esbuildOptions": {
-              "sourcemap": false,
-              "outExtension": {
-                ".js": ".js"
-              }
-            }
-          }
-        }
-      },
-      "serve": {
-        "continuous": true,
-        "executor": "@nx/js:node",
-        "defaultConfiguration": "development",
-        "dependsOn": [
-          "build"
-        ],
-        "options": {
-          "buildTarget": "@game1/sandbox:build",
-          "runBuildTargetDependencies": false
-        },
-        "configurations": {
-          "development": {
-            "buildTarget": "@game1/sandbox:build:development"
-          },
-          "production": {
-            "buildTarget": "@game1/sandbox:build:production"
-          }
+          "declarationRootDir": "application/sandbox/src"
         }
       }
     }
   },
-  "devDependencies": {
-    "@game1/individual": "workspace:*"
-  }
+  "dependencies": {}
 }
