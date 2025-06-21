@@ -1,0 +1,34 @@
+# Node and build output
+node_modules/
+dist/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Local env
+.env*
+
+# Editor folders
+.vscode/
+.idea/
+*.swp
+
+# Logs and OS
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.DS_Store
+
+# Others
+coverage/
+*.log
+*.tgz
+
+# Prettier/Eslint/linter
+.eslintcache
+
+# Misc
+*.local
+*.sublime-project
+*.sublime-workspace
