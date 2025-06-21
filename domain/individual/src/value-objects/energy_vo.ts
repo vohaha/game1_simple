@@ -1,5 +1,24 @@
 import z from 'zod/v4';
 
+export abstract class ValueObject<T> {
+  readonly #value: T;
+
+  constructor(value: unknown, schema: z.ZodType<T>) {
+    this.#value = schema.parse(value);
+  }
+
+  public equals(vo?: ValueObject<T>): boolean {
+    if (vo == null) {
+      return false;
+    }
+    return this.#value === vo.#value;
+  }
+
+  public get value(): T {
+    return this.#value;
+  }
+}
+
 const ENERGY_DEFAULT_VALUE = 0;
 const ENERGY_MIN_VALUE = 0;
 const ENERGY_MAX_VALUE = 100;
@@ -12,36 +31,20 @@ export const EnergyValueSchema = z
 
 export type EnergyValueType = z.infer<typeof EnergyValueSchema>;
 
-export class EnergyVO {
+export class EnergyVO extends ValueObject<EnergyValueType> {
   public static readonly DEFAULT = ENERGY_DEFAULT_VALUE;
   public static readonly MIN = ENERGY_MIN_VALUE;
   public static readonly MAX = ENERGY_MAX_VALUE;
 
-  public readonly value: EnergyValueType;
-
-  constructor(value: unknown) {
-    const validatedEnergyValue = EnergyValueSchema.safeParse(value);
-    if (validatedEnergyValue.success) {
-      this.value = EnergyVO.clamp(validatedEnergyValue.data as EnergyValueType);
-    } else {
-      this.value = EnergyVO.DEFAULT;
-    }
+  constructor(value: unknown = EnergyVO.DEFAULT) {
+    super(value, EnergyValueSchema);
   }
 
-  public change(delta: number): EnergyVO {
+  public spend(delta: number): EnergyVO {
     return new EnergyVO(this.value + delta);
   }
 
-  public equals(other: EnergyVO): boolean {
-    return this.value === other.value;
-  }
-
-  private static clamp(value: number): number {
-    if (value < EnergyVO.MIN) return EnergyVO.MIN;
-    if (value > EnergyVO.MAX) return EnergyVO.MAX;
-    return Math.floor(value);
-  }
-  fromValue(value: unknown): EnergyVO {
-    return new EnergyVO(value);
+  public restore(delta: number): EnergyVO {
+    return new EnergyVO(this.value + delta);
   }
 }

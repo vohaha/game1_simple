@@ -21,15 +21,18 @@ export class Individual extends Entity<IndividualEventCreate> {
   #energy: EnergyVO;
 
   constructor(input: { name: string; energy?: number; id?: unknown }) {
-    const individualInput = { ...input, origin: 'individual' };
-    super(individualInput);
-    this.#energy = new EnergyVO(individualInput.energy);
+    super({ ...input, origin: 'individual' });
+    this.#energy = new EnergyVO(input.energy);
   }
 
-  private set energy(newValue) {
+  changeEnergy(newValue: number) {
     try {
-      this.#energy = new EnergyVO(newValue);
       const prevEnergyValue = this.#energy.value;
+      if (newValue >= 0) {
+        this.#energy = this.#energy.restore(newValue);
+      } else {
+        this.#energy = this.#energy.spend(newValue);
+      }
 
       this.addEvent({
         type: 'energyChanged',
@@ -50,6 +53,10 @@ export class Individual extends Entity<IndividualEventCreate> {
 
   get energy(): EnergyVO {
     return this.#energy;
+  }
+
+  protected createProduct(productCreateProps: { requiredEnergy: number }) {
+    this.energy = productCreateProps.requiredEnergy;
   }
 
   static serialize(entity: Individual): string {
@@ -102,3 +109,4 @@ export class Individual extends Entity<IndividualEventCreate> {
 // Type check to ensure Individual implements ISerializable correctly
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _check: ISerializable<Individual> = Individual;
+console.log(_check);

@@ -4,13 +4,10 @@
   "include": [],
   "references": [
     {
-      "path": "../../shared/types"
+      "path": "../../domain/individual"
     },
     {
-      "path": "./tsconfig.lib.json"
-    },
-    {
-      "path": "./tsconfig.spec.json"
+      "path": "./tsconfig.app.json"
     }
   ]
 }
