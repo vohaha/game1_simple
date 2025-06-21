@@ -125,62 +125,98 @@ class ApplicationService {
   }
 }
 
-// Application scenario: Orchestrated multi-context business flow
-function mainScenario() {
-  // 1. Register Alice & provision energy
-  const traitFocus = new IndividualTraitVO('focus', 8, 'cognitive');
-  const traitTrust = new IndividualTraitVO('trust', 6, 'personality');
-  const { individual: alice, energy: aliceEnergy } = ApplicationService.registerIndividual(
-    'alice',
-    'Alice',
-    [traitFocus, traitTrust],
+// Application scenario: Geopolitical userflow: multi-country, conflict, and support dynamics
+
+function geopoliticalUserflow() {
+  // 1. Create individuals that will act as founders/leaders of each country
+  const countries = [
+    { id: 'usa', name: 'USA' },
+    { id: 'chn', name: 'China' },
+    { id: 'ukr', name: 'Ukraine' },
+    { id: 'fra', name: 'France' },
+    { id: 'ger', name: 'Germany' },
+    { id: 'ita', name: 'Italy' },
+    { id: 'pol', name: 'Poland' },
+    { id: 'c404', name: 'Country404' },
+  ];
+
+  // Each gets a leader (traits are minimal for this demo)
+  const leaders: Record<string, IndividualAggregate> = {};
+  const energies: Record<string, EnergyAggregate> = {};
+  for (const country of countries) {
+    const { individual, energy } = ApplicationService.registerIndividual(
+      `${country.id}_ldr`,
+      `${country.name}Leader`,
+      [new IndividualTraitVO('leadership', 8, 'personality')],
+    );
+    leaders[country.name] = individual;
+    energies[country.name] = energy;
+  }
+
+  // 2. Create groups ("countries"), each led by its founder
+  const groups: Record<string, GroupAggregate> = {};
+  for (const country of countries) {
+    groups[country.name] = ApplicationService.createGroup(
+      `group_${country.id}`,
+      country.name,
+      leaders[country.name],
+    );
+    groups[country.name].setRoleForMember(leaders[country.name].getId(), 'leader');
+  }
+
+  // 3. Country404 declares war on Ukraine (special domain event + relationship)
+  eventLog.push({
+    event: 'CountryDeclaredWar',
+    payload: { aggressor: 'Country404', target: 'Ukraine' },
+  });
+  // TODO: Implement actual war state/deal in Group/Deal aggregate as needed
+
+  // 4. Ukraine seeks allies/support: creates "UkraineAllies" group and tries to add countries
+  const ukrSupportGroup = ApplicationService.createGroup(
+    'group_ukr_support',
+    'UkraineAllies',
+    leaders['Ukraine'],
   );
+  ApplicationService.addMemberToGroup(ukrSupportGroup, leaders['France'], 'ally');
+  ApplicationService.addMemberToGroup(ukrSupportGroup, leaders['Germany'], 'ally');
+  ApplicationService.addMemberToGroup(ukrSupportGroup, leaders['Poland'], 'ally');
+  // TODO: Add more dynamic logic/negotiation for support agreements
 
-  // 2. Alice forms group "Pioneers"
-  const pioneers = ApplicationService.createGroup('group1', 'Pioneers', alice);
-
-  // 3. Alice adds herself as official leader (demonstrate role mutation)
-  pioneers.setRoleForMember(alice.getId(), 'leader');
-  eventLog.push({
-    event: 'RoleAssigned',
-    payload: { group: pioneers.getName(), member: alice.getName(), role: 'leader' },
-  });
-
-  // 4. Alice expends energy for a group project
-  ApplicationService.performProductiveAction(aliceEnergy, 20, alice, pioneers);
-
-  // 5. Add a group property (cohesion)
-  const cohesionVO = new GroupPropertyVO('cohesion', 0.85);
-  pioneers.setProperty(cohesionVO);
-  eventLog.push({
-    event: 'GroupPropertySet',
-    payload: { group: pioneers.getName(), property: 'cohesion', value: 0.85 },
-  });
-
-  // 6. Negotiate deal with "Explorers" group
-  const dealTerms = [new DealTermVO('resource_share', '60/40'), new DealTermVO('duration', 14)];
-  const deal = ApplicationService.negotiateDeal('deal1', pioneers, 'group2', dealTerms);
-
-  // 7. Pioneers fulfill first obligation in the deal
+  // 5. Country404 seeks relationship/support from China (deal/alliance)
+  const c404_china_terms = [
+    new DealTermVO('military_support', true),
+    new DealTermVO('resource_aid', 1000),
+  ];
+  const c404_china_deal = ApplicationService.negotiateDeal(
+    'deal_c404_china_support',
+    groups['Country404'],
+    groups['China'].getId(),
+    c404_china_terms,
+  );
   ApplicationService.fulfillDealClause(
-    deal,
-    pioneers.getId(),
-    'Delivered initial resources to Explorers',
+    c404_china_deal,
+    groups['Country404'].getId(),
+    'China agrees to support Country404 in the conflict',
   );
 
-  // Output whole flow: Events & final states
-  console.log('=== APPLICATION INTEGRATION EVENT LOG ===');
+  // Print event log for this scenario
+  console.log('=== GEOPOLITICAL USERFLOW EVENT LOG ===');
   for (const evt of eventLog) {
     console.log(evt.event, evt.payload);
   }
 
+  // Print final state snapshots
   console.log('\n=== FINAL STATE SNAPSHOTS ===');
-  console.log('Alice:', alice.getSnapshot());
-  console.log('Energy:', aliceEnergy.getSnapshot());
-  console.log('Pioneers:', pioneers.getSnapshot());
-  console.log('Deal:', deal.getSnapshot());
-  // TODO: Integrate network, progression, and timeline/circadian debuff mechanics
-  // TODO: Replace eventLog with actual event bus/publisher for distributed or message-driven design
+  for (const name of Object.keys(groups)) {
+    console.log(`${name} group:`, groups[name].getSnapshot());
+    if (leaders[name]) {
+      console.log(`${name} leader:`, leaders[name].getSnapshot());
+      console.log(`${name} energy:`, energies[name].getSnapshot());
+    }
+  }
+  console.log('UkraineAllies group:', ukrSupportGroup.getSnapshot());
+  console.log('C404-China Deal:', c404_china_deal.getSnapshot());
+  // TODO: Model ongoing war/peace negotiations, resource transfer events, and full alliance mechanics
 }
 
-mainScenario();
+geopoliticalUserflow();

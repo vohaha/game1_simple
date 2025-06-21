@@ -18,8 +18,9 @@ Your task is to construct a step-by-step "userflow" that demonstrates how an end
 # (e.g., "A new user registers, is assigned energy, joins a group, forms a deal, and fulfills a clause")
 # BE EXPLICIT: each operation should reference the context (Individual, Group, Deal, etc.)
 # Add numbered steps and notes as needed.
-#
-# Players create groups that represent countires: USA, China, Ukraine, France, German, Italy, Poland, Country404. Country404 declares a war to Ukraine. Ukraine trying to create a group that will support it. Country404 creates relationship with China get support.
+
+Players create groups that represent countires: USA, China, Ukraine, France, German, Italy, Poland, Country404. Country404 declares a war to Ukraine. Ukraine trying to create a group that will support it. Country404 creates relationship with China get support.
+
 # ---------------------------------------------------
 ---
 
