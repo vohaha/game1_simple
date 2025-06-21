@@ -7,12 +7,7 @@ export abstract class ValueObject<T> {
     this.#value = schema.parse(value);
   }
 
-  public equals(vo?: ValueObject<T>): boolean {
-    if (vo == null) {
-      return false;
-    }
-    return this.#value === vo.#value;
-  }
+  public abstract equals(otherVo?: ValueObject<T>): boolean;
 
   public get value(): T {
     return this.#value;
@@ -41,10 +36,14 @@ export class EnergyVO extends ValueObject<EnergyValueType> {
   }
 
   public spend(delta: number): EnergyVO {
-    return new EnergyVO(this.value + delta);
+    return new EnergyVO(this.value - delta);
   }
 
   public restore(delta: number): EnergyVO {
     return new EnergyVO(this.value + delta);
+  }
+
+  public override equals(otherEnergy?: EnergyVO): boolean {
+    return otherEnergy != null && this.value === otherEnergy.value;
   }
 }

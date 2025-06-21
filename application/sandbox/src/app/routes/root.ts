@@ -3,15 +3,18 @@ import { IndividualFactory } from '@game1/individual';
 
 const indiv = IndividualFactory.create({
   name: 'vh',
+  energy: 100,
 });
 
 setInterval(() => {
-  indiv.energy.spend(+1);
+  indiv.performAction('show_focus', 'defaultFocus');
 }, 100);
 
 export default async function (fastify: FastifyInstance) {
   fastify.get('/', async function () {
-    console.log('energy = ', indiv.energy.value);
-    return { message: `${indiv.energy.value} vohaha` };
+    return {
+      message: indiv.isTired() ? 'vohaha tired' : 'vohaha fine',
+      energy: indiv.energy,
+    };
   });
 }

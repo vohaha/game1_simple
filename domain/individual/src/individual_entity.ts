@@ -1,69 +1,50 @@
 import { IndividualDTO, IndividualSchema } from './individual_schema.ts';
-import { EnergyValueType, EnergyVO } from './value-objects/index.ts';
+import { EnergyVO } from './value-objects/index.ts';
 import { Entity, ISerializable } from '@game1/types';
 
-type IndividualEventCreate =
-  | {
-      type: 'energyChanged';
-      payload: {
-        prev: EnergyValueType;
-        new: EnergyValueType;
-      };
-    }
-  | {
-      type: 'energyChangeFailed';
-      payload: {
-        error: Error;
-      };
-    };
+// type IndividualEventCreate =
+//   | {
+//       type: 'energyChanged';
+//       payload: {
+//         prev: EnergyValueType;
+//         new: EnergyValueType;
+//       };
+//     }
+//   | {
+//       type: 'energyChangeFailed';
+//       payload: {
+//         error: Error;
+//       };
+//     };
 
-export class Individual extends Entity<IndividualEventCreate> {
+export class Individual extends Entity {
   #energy: EnergyVO;
 
   constructor(input: { name: string; energy?: number; id?: unknown }) {
     super({ ...input, origin: 'individual' });
     this.#energy = new EnergyVO(input.energy);
+    const indiv = this;
+    this.registerAction('show_focus', 'defaultFocus', async () => {
+      indiv.#energy = indiv.#energy.spend(1);
+      return {
+        focusPayload: indiv.#energy.value,
+      };
+    });
   }
 
-  changeEnergy(newValue: number) {
-    try {
-      const prevEnergyValue = this.#energy.value;
-      if (newValue >= 0) {
-        this.#energy = this.#energy.restore(newValue);
-      } else {
-        this.#energy = this.#energy.spend(newValue);
-      }
-
-      this.addEvent({
-        type: 'energyChanged',
-        payload: {
-          prev: prevEnergyValue,
-          new: this.#energy.value,
-        },
-      });
-    } catch (e) {
-      this.addEvent({
-        type: 'energyChangeFailed',
-        payload: {
-          error: e instanceof Error ? e : new Error(String(e)),
-        },
-      });
-    }
+  public get energy() {
+    return this.#energy.value;
   }
 
-  get energy(): EnergyVO {
-    return this.#energy;
-  }
-
-  protected createProduct(productCreateProps: { requiredEnergy: number }) {
-    this.energy = productCreateProps.requiredEnergy;
+  public isTired() {
+    return this.#energy.value < 50;
   }
 
   static serialize(entity: Individual): string {
     const data: IndividualDTO = {
       id: entity.id,
       name: entity.name,
-      energy: entity.energy.value,
+      energy: entity.#energy.value,
     };
 
     const validated = IndividualSchema.safeParse(data);
