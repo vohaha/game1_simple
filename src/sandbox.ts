@@ -17,7 +17,7 @@ import { DealTermVO } from './deal/DealTermVO';
 // MOCK: ChronotypeWindow placeholder for EnergyEntity construction
 class ChronotypeWindow {}
 // Simple "event log" to mimic basic domain events (no infra bus)
-const eventLog: Array<{ event: string; payload: unknown }> = [];
+export const eventLog: Array<{ event: string; payload: unknown }> = [];
 
 class ApplicationService {
   // Registers an individual, provisions energy, and returns both aggregates
@@ -127,7 +127,7 @@ class ApplicationService {
 
 // Application scenario: Geopolitical userflow: multi-country, conflict, and support dynamics
 
-function geopoliticalUserflow() {
+export function geopoliticalUserflow() {
   // 1. Create individuals that will act as founders/leaders of each country
   const countries = [
     { id: 'usa', name: 'USA' },
@@ -219,4 +219,5 @@ function geopoliticalUserflow() {
   // TODO: Model ongoing war/peace negotiations, resource transfer events, and full alliance mechanics
 }
 
-geopoliticalUserflow();
+// To run the scenario, import and invoke geopoliticalUserflow() from your server or main module.
+// This avoids circular execution and allows eventLog to be exported cleanly.
