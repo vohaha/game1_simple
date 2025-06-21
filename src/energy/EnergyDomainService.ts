@@ -9,8 +9,10 @@ export class EnergyDomainService {
   transferEnergy(from: EnergyAggregate, to: EnergyAggregate, amount: number): boolean {
     const energyVO = new EnergyValueObject(amount);
     if (from.getCurrentEnergy() < energyVO.amount) return false;
-    if (!from.spendEnergy(energyVO.amount)) return false;
-    to.regenerateEnergy(energyVO.amount);
+    if (!from.spendEnergy(energyVO)) {
+      return false;
+    }
+    to.regenerateEnergy(energyVO);
     return true;
   }
 
