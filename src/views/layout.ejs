@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title><%= typeof title !== 'undefined' ? title + ' — Game1' : 'Game1' %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Tailwind via CDN for rapid DX; TODO: move to local/config for prod -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- htmx for UI hydration/refresh -->
+    <script src="https://unpkg.com/htmx.org@1.9.9"></script>
+    <% if (typeof head !== 'undefined') { %>
+      <%- head %>
+    <% } %>
+  </head>
+  <body class="bg-gray-50 min-h-screen text-gray-800">
+    <nav class="bg-white shadow mb-4">
+      <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="/" class="text-lg font-bold text-blue-700 hover:text-blue-900">Game1 Sandbox</a>
+        <div>
+          <a class="text-gray-700 hover:text-blue-700 px-2" href="/individual/usa_ldr">USA Leader</a>
+          <a class="text-gray-700 hover:text-blue-700 px-2" href="/group/group_usa">USA Group</a>
+          <!-- TODO: Menu: Dynamic entities/groups -->
+        </div>
+      </div>
+    </nav>
+    <main class="container mx-auto px-4 mb-8">
+      <% if (typeof page !== 'undefined') { %>
+        <%- page %>
+      <% } else { %>
+        <%- body %>
+      <% } %>
+    </main>
+    <footer class="text-center text-xs text-gray-400 py-3 border-t mt-8">
+      Game1 Simulation &copy; <%= new Date().getFullYear() %> &mdash; DDD systems sandbox.
+    </footer>
+  </body>
+</html>
