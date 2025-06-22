@@ -8,19 +8,15 @@ import { IndividualTraitVO } from './individual/IndividualTraitVO';
 
 import { GroupEntity } from './group/GroupEntity';
 import { GroupAggregate } from './group/GroupAggregate';
-import { GroupPropertyVO } from './group/GroupPropertyVO';
 
 import { DealEntity } from './deal/DealEntity';
 import { DealAggregate } from './deal/DealAggregate';
 import { DealTermVO } from './deal/DealTermVO';
+import { ChronotypeWindow } from './time/ChronotypeWindowVO';
 
-// MOCK: ChronotypeWindow placeholder for EnergyEntity construction
-class ChronotypeWindow {}
-// Simple "event log" to mimic basic domain events (no infra bus)
-export const eventLog: Array<{ event: string; payload: unknown }> = [];
+export const eventLog: Array<{ event: string; payload: Record<string, unknown> }> = [];
 
 class ApplicationService {
-  // Registers an individual, provisions energy, and returns both aggregates
   static registerIndividual(
     id: string,
     name: string,
@@ -42,7 +38,6 @@ class ApplicationService {
     return { individual, energy };
   }
 
-  // Forms a group around an individual (initiator is founder/leader)
   static createGroup(id: string, name: string, founder: IndividualAggregate) {
     const founderId = founder.getId();
     const group = new GroupAggregate(
@@ -52,7 +47,6 @@ class ApplicationService {
     return group;
   }
 
-  // Adds an individual to a group, assigns role
   static addMemberToGroup(group: GroupAggregate, individual: IndividualAggregate, role = 'member') {
     group.addMember(individual.getId(), role);
     group.setRoleForMember(individual.getId(), role);
@@ -62,7 +56,6 @@ class ApplicationService {
     });
   }
 
-  // Group and counterparty negotiate a deal. Returns a deal aggregate.
   static negotiateDeal(
     dealId: string,
     groupA: GroupAggregate,
