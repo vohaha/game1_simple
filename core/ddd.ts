@@ -1,10 +1,27 @@
+import { EntityId } from './types';
+
 // ✅ DDD Core Abstractions for Use in Any Domain
 // These are reusable, domain-agnostic base contracts and abstract classes
 // representing the foundational building blocks of Domain-Driven Design
 
 // 1. Value Object
 export interface ValueObject<T> {
-  equals(other: T): boolean;
+  equals(other: ValueObject<T>): boolean;
+}
+
+export abstract class AbstractValueObject<T extends object> implements ValueObject<T> {
+  protected readonly props: T;
+
+  constructor(props: T) {
+    this.props = Object.freeze(props);
+  }
+
+  public equals(other: AbstractValueObject<T>): boolean {
+    if (other === null || other === undefined) {
+      return false;
+    }
+    return JSON.stringify(this.props) === JSON.stringify(other.props);
+  }
 }
 
 // 2. Entity
@@ -23,8 +40,8 @@ export interface AggregateRoot<ID> extends Entity<ID> {
 // 4. Domain Event
 export interface DomainEvent {
   readonly eventType: string;
-  readonly occurredAt: number;
-  readonly aggregateId: string;
+  readonly occurredAt: Date;
+  readonly aggregateId: EntityId;
 }
 
 // 5. Repository
