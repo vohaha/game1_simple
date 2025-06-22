@@ -128,7 +128,7 @@ Network -->|feeds metrics to| Balance
 
 ## 7. Integration Guidelines
 
-- Use **published interfaces** between contexts (defined via interfaces in `/docs/interfaces.md`)
+- Use **published interfaces** between contexts
 - Communicate using **event-based messaging** (Observer Pattern across modules)
 - Apply **Mediator Pattern** for orchestrated systems like Deals & Network
 - Maintain **aggregate roots** (e.g., Group, Individual) for consistency boundaries
