@@ -2,7 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import expressLayouts from 'express-ejs-layouts';
-import { geopoliticalUserflow, eventLog } from './sandbox';
+import { ApplicationService, eventLog } from './sandbox';
+import { IndividualTraitVO } from './individual/IndividualTraitVO';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,9 +39,14 @@ app.get('/individual/:id', (req, res) => {});
 
 app.get('/htmx/individual/:id/state', (req, res) => {});
 
+const indiv = ApplicationService.registerIndividual('1', 'vh', [
+  new IndividualTraitVO('leadership', 8, 'personality'),
+]);
+
 app.get('/', (req, res) => {
   res.send(`
     <h2>Game1 Sandbox Server</h2>
+    ${JSON.stringify(indiv.individual.getSnapshot())}
   `);
 });
 

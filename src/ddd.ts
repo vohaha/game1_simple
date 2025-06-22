@@ -1,0 +1,160 @@
+// ✅ DDD Core Abstractions for Use in Any Domain
+// These are reusable, domain-agnostic base contracts and abstract classes
+// representing the foundational building blocks of Domain-Driven Design
+
+// 1. Value Object
+export interface ValueObject<T> {
+  equals(other: T): boolean;
+}
+
+// 2. Entity
+export interface Entity<ID> {
+  id: ID;
+  equals(other: Entity<ID>): boolean;
+}
+
+// 3. Aggregate Root (extends Entity)
+export interface AggregateRoot<ID> extends Entity<ID> {
+  // Usually emits domain events
+  getDomainEvents(): DomainEvent[];
+  clearDomainEvents(): void;
+}
+
+// 4. Domain Event
+export interface DomainEvent {
+  readonly eventType: string;
+  readonly occurredAt: number;
+  readonly aggregateId: string;
+}
+
+// 5. Repository
+export interface Repository<ID, T extends AggregateRoot<ID>> {
+  findById(id: ID): Promise<T | null>;
+  save(entity: T): Promise<void>;
+  delete(id: ID): Promise<void>;
+}
+
+// 6. Factory (for aggregates/entities)
+export interface Factory<T> {
+  create(...args: any[]): T;
+  restore(snapshot: any): T;
+}
+
+// 7. Specification (domain rule encapsulation)
+export interface Specification<T> {
+  isSatisfiedBy(candidate: T): boolean;
+  and(other: Specification<T>): Specification<T>;
+  or(other: Specification<T>): Specification<T>;
+  not(): Specification<T>;
+}
+
+// 8. Domain Service
+export interface DomainService {
+  // Marker interface (may expose domain-specific methods)
+}
+
+// 9. Application Service
+export interface ApplicationService<Request, Response> {
+  execute(request: Request): Promise<Response>;
+}
+
+// 10. Unit of Work (optional if using transactions)
+export interface UnitOfWork {
+  begin(): Promise<void>;
+  commit(): Promise<void>;
+  rollback(): Promise<void>;
+}
+
+// 11. Event Bus / Domain Events Dispatcher
+export interface EventBus {
+  publish(event: DomainEvent): void;
+  publishAll(events: DomainEvent[]): void;
+  subscribe(eventType: string, handler: (event: DomainEvent) => void): void;
+}
+
+// 12. Snapshotting (optional)
+export interface Snapshotable {
+  getSnapshot(): any;
+}
+
+// === Abstract Classes ===
+
+export abstract class AbstractEntity<ID> implements Entity<ID> {
+  constructor(protected readonly _id: ID) {}
+  get id(): ID {
+    return this._id;
+  }
+  equals(other: Entity<ID>): boolean {
+    return other.id === this.id;
+  }
+}
+
+export abstract class AbstractAggregateRoot<ID>
+  extends AbstractEntity<ID>
+  implements AggregateRoot<ID>
+{
+  private domainEvents: DomainEvent[] = [];
+
+  protected addDomainEvent(event: DomainEvent): void {
+    this.domainEvents.push(event);
+  }
+
+  getDomainEvents(): DomainEvent[] {
+    return [...this.domainEvents];
+  }
+
+  clearDomainEvents(): void {
+    this.domainEvents = [];
+  }
+}
+
+export abstract class AbstractSpecification<T> implements Specification<T> {
+  abstract isSatisfiedBy(candidate: T): boolean;
+
+  and(other: Specification<T>): Specification<T> {
+    return new AndSpecification(this, other);
+  }
+
+  or(other: Specification<T>): Specification<T> {
+    return new OrSpecification(this, other);
+  }
+
+  not(): Specification<T> {
+    return new NotSpecification(this);
+  }
+}
+
+// === Combinator Specs ===
+
+class AndSpecification<T> extends AbstractSpecification<T> {
+  constructor(
+    private left: Specification<T>,
+    private right: Specification<T>,
+  ) {
+    super();
+  }
+  isSatisfiedBy(candidate: T): boolean {
+    return this.left.isSatisfiedBy(candidate) && this.right.isSatisfiedBy(candidate);
+  }
+}
+
+class OrSpecification<T> extends AbstractSpecification<T> {
+  constructor(
+    private left: Specification<T>,
+    private right: Specification<T>,
+  ) {
+    super();
+  }
+  isSatisfiedBy(candidate: T): boolean {
+    return this.left.isSatisfiedBy(candidate) || this.right.isSatisfiedBy(candidate);
+  }
+}
+
+class NotSpecification<T> extends AbstractSpecification<T> {
+  constructor(private spec: Specification<T>) {
+    super();
+  }
+  isSatisfiedBy(candidate: T): boolean {
+    return !this.spec.isSatisfiedBy(candidate);
+  }
+}

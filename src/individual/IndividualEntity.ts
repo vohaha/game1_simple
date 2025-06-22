@@ -1,6 +1,5 @@
 import { IIndividualEntity, IndividualSnapshot } from '../interfaces/IIndividualEntity';
 import { IndividualTraitVO } from './IndividualTraitVO';
-import { domainEventBus } from '../integration/DomainEventBus';
 import { TraitChangedEvent } from '../shared/events/DomainEvent';
 
 /**
@@ -58,16 +57,6 @@ export class IndividualEntity implements IIndividualEntity {
     const prev = this.traits.get(vo.key);
     // TODO: Enforce trait addition/removal invariants and authorizations for this change.
     this.traits.set(vo.key, vo);
-    domainEventBus.publish({
-      eventType: 'TraitChanged',
-      context: 'Individual',
-      aggregateId: this.getId(),
-      timestamp: Date.now(),
-      traitKey: vo.key,
-      oldValue: prev?.value,
-      newValue: vo.value,
-      // Optionally: changeReason for provenance (to be injected from aggregate/service if needed)
-    } satisfies TraitChangedEvent);
   }
 
   setState(key: string, value: unknown): void {

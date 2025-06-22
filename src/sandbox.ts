@@ -16,7 +16,7 @@ import { ChronotypeWindow } from './time/ChronotypeWindowVO';
 
 export const eventLog: Array<{ event: string; payload: Record<string, unknown> }> = [];
 
-class ApplicationService {
+export class ApplicationService {
   static registerIndividual(
     id: string,
     name: string,

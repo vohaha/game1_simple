@@ -110,9 +110,35 @@ Observe and adapt systems	Balance, Deal, Production
 	•	Apply Mediator Pattern for orchestrated systems like Deals & Network
 	•	Maintain aggregate roots (e.g., Group, Individual) for consistency boundaries
 
+Example: GameEngine
+	•	Central entry point (gameEngine.ts) initializes and wires up all modules
+	•	Uses IGameContext to expose eventBus, timeSystem, and module registry
+	•	Enables creation of entities via factories (defineIndividual, defineGroup)
+	•	Drives time progression, action execution, and persistence
+
 ⸻
 
-8. Evolution and Governance
+8. Freedom & Entropy Control via Action System
+
+Problem:
+
+Max freedom for players causes uncontrolled complexity across domains.
+
+Solution: introduce Action Layer:
+	•	IAction: unified object describing a player action
+	•	ActionEngine: central service to validate (via Policy), execute (via Handler)
+	•	IActionPolicy: domain-based rule checker (e.g. “Group must approve join”)
+	•	IActionHandler: encapsulates execution logic
+	•	IAbility: lists available actions for UI/agent (context-aware)
+
+Benefits:
+	•	Centralized control over possible and valid actions
+	•	Easily testable, switchable, and configurable
+	•	Game logic emerges from combinations of small, testable action handlers
+
+⸻
+
+9. Evolution and Governance
 	•	Track context ownership — each context should have maintainers
 	•	Add new contexts via capability discovery (e.g. law, governance, religion?)
 	•	Update context map and strategic role assessments quarterly
@@ -120,8 +146,9 @@ Observe and adapt systems	Balance, Deal, Production
 
 ⸻
 
-9. References
+10. References
 	•	“Domain-Driven Architecture Diagrams” — Nick Tune (https://medium.com/nick-tune-tech-strategy-blog/domain-driven-architecture-diagrams-139a75acb578)
 	•	Game1 Core Documentation (2025-05)
 	•	Eric Evans, “Domain-Driven Design”
 	•	Vaughn Vernon, “Implementing DDD”
+	•	ChatGPT Game1 integration discussions (2025-06)
