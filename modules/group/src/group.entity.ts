@@ -1,8 +1,22 @@
-import { Entity } from '../../../core/ddd';
+import { AbstractEntity } from '../../../core/ddd';
+import { EntityId } from '../../../core/types';
 
-// TODO: Define properties for a group
-export type GroupProps = {};
-
-export class Group extends Entity<GroupProps> {
-  // TODO: Implement entity logic
+export interface GroupProps {
+  name: string;
+  members: EntityId[];
 }
+
+export class Group extends AbstractEntity<EntityId> {
+  public readonly props: GroupProps;
+
+  private constructor(id: EntityId, props: GroupProps) {
+    super(id);
+    this.props = props;
+  }
+
+  public static create(id: EntityId, props: GroupProps): Group {
+    // TODO: Add validation
+    return new Group(id, props);
+  }
+}
+

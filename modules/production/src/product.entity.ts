@@ -1,8 +1,22 @@
-import { Entity } from '../../../core/ddd';
+import { AbstractEntity } from '../../../core/ddd';
+import { EntityId } from '../../../core/types';
 
-// TODO: Define properties for a product
-export type ProductProps = {};
-
-export class Product extends Entity<ProductProps> {
-  // TODO: Implement entity logic
+export interface ProductProps {
+  name: string;
+  quality: number;
 }
+
+export class Product extends AbstractEntity<EntityId> {
+  public readonly props: ProductProps;
+
+  private constructor(id: EntityId, props: ProductProps) {
+    super(id);
+    this.props = props;
+  }
+
+  public static create(id: EntityId, props: ProductProps): Product {
+    // TODO: Add validation
+    return new Product(id, props);
+  }
+}
+
