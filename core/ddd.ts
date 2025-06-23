@@ -94,6 +94,13 @@ export interface Snapshotable {
   getSnapshot(): any;
 }
 
+// 13. Domain Error
+export abstract class DomainError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = this.constructor.name;
+  }
+}
 // === Abstract Classes ===
 
 export abstract class AbstractEntity<ID> implements Entity<ID> {
