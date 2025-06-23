@@ -1,5 +1,5 @@
-import { IAbility, IAction } from '../../../core/actions';
-import { IGameContext } from '../../../core/game-context';
+import { IAbility, IAction } from '@core/actions';
+import { IGameContext } from '@core/game-context';
 import { Individual } from './individual.entity';
 
 export class IndividualAbilities implements IAbility<Individual> {

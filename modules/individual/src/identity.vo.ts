@@ -1,4 +1,4 @@
-import { AbstractValueObject } from '../../../core/ddd';
+import { AbstractValueObject } from '@core/ddd';
 
 // TODO: Define properties for identity, e.g., a unique key or name.
 export interface IdentityProps {

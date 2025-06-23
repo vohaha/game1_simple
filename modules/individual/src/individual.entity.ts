@@ -1,10 +1,12 @@
-import { AbstractEntity } from '../../../core/ddd';
-import { EntityId } from '../../../core/types';
+import { AbstractEntity } from '@core/ddd';
+import { EntityId } from '@core/types';
+import { Energy } from '@modules/energy/src/energy.vo';
 
 // TODO: Define properties for an individual.
 // For example, a name or other attributes.
 export interface IndividualProps {
   name: string;
+  energy: Energy;
 }
 
 /**
