@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-This document provides a strategic overview of the domain architecture for **Game1**, grounded in the principles of **Domain-Driven Design (DDD)**. It defines the core domain, outlines bounded contexts, maps their relationships, and clarifies the strategic roles of each context. The goal is to improve shared understanding across development, design, and strategic planning.
+This document provides a strategic overview of the domain architecture for **Game1**, grounded in the principles of **Domain-Driven Design (DDD)**. It defines the core domain, outlines bounded contexts, maps their relationships, and clarifies the strategic roles of each context. The goal is to improve shared understanding across development, design, and strategic planning, and to enable safe, incremental evolution.
 
 ---
 
@@ -32,19 +32,22 @@ These systems define:
 
 ## 3. Bounded Contexts
 
-Below are the key bounded contexts in Game1:
-
-| Context           | Responsibility                                                               |
-| ----------------- | ---------------------------------------------------------------------------- |
-| **Energy System** | Manages action capacity, sleep, tokenization, and regeneration               |
-| **Individual**    | Models player character, identity spectrum, skills, and psychological traits |
-| **Production**    | Governs product and service creation, pausing, efficiency, complexity        |
-| **Group**         | Represents collective effort, roles, specialization, internal dynamics       |
-| **Deal System**   | Handles formal agreements between entities, term enforcement, reputation     |
-| **Network**       | Manages connections, reputation, social capital, economic signals            |
-| **Time System**   | Tracks real-time, circadian preferences, debuffs, and scheduling             |
-| **Progression**   | Tracks skill evolution, diminishing returns, identity shifts                 |
-| **Balance**       | Observes the ecosystem and applies balancing actions                         |
+| Context            | Responsibility                                                               |
+| ------------------ | ---------------------------------------------------------------------------- |
+| **Energy System**  | Manages action capacity, sleep, tokenization, and regeneration               |
+| **Individual**     | Models player character, identity spectrum, skills, and psychological traits |
+| **Production**     | Governs product and service creation, pausing, efficiency, complexity        |
+| **Group**          | Represents collective effort, roles, specialization, internal dynamics       |
+| **Deal System**    | Handles formal agreements between entities, term enforcement, reputation     |
+| **Network**        | Manages connections, reputation, social capital, economic signals            |
+| **Time System**    | Tracks real-time, circadian preferences, debuffs, and scheduling             |
+| **Progression**    | Tracks skill evolution, diminishing returns, identity shifts                 |
+| **Balance**        | Observes the ecosystem and applies balancing actions                         |
+| **Governance**     | (Planned) Manages elections, leadership, group rules                         |
+| **Legal**          | (Planned) Handles arbitration, rights enforcement                            |
+| **Belief System**  | (Planned) Captures worldviews, morality, ideology propagation                |
+| **Infrastructure** | (Planned) Models shared property, facilities, maintenance                    |
+| **Memory**         | (Planned) Captures narrative, history, cultural evolution                    |
 
 ---
 
@@ -58,71 +61,49 @@ Below are the key bounded contexts in Game1:
 - **Deal ↔ Group & Individual** — Mediates interactions (Mediator Pattern)
 - **Progression → Individual & Production** — Learns from their activity (Observer)
 - **Network ↔ Individual/Group** — Broadcasts and filters interactions (Mediator)
-
-### 🗺 Diagram Key (Mermaid)
-
-```mermaid
-flowchart TD
-
-%% ENTITY NODES
-Individual["📍 Individual"]
-EnergySystem["⚡ Energy System"]
-TimeSystem["🕒 Time System"]
-Production["🏭 Production System"]
-Group["👥 Group"]
-Deal["🤝 Deal System"]
-Network["🌐 Network"]
-Progression["📈 Progression System"]
-Balance["⚖️ Balance Module"]
-
-%% RELATIONSHIPS
-Individual -->|uses| EnergySystem
-EnergySystem -->|time-dependent| TimeSystem
-Individual -->|affects| Progression
-Progression -->|observes| Production
-Individual -->|executes| Production
-Production -->|consumes| EnergySystem
-Group -->|composes| Individual
-Group -->|produces with| Production
-Individual -->|joins via| Deal
-Group -->|manages via| Deal
-Deal -->|broadcasts| Network
-Network -->|updates reputation for| Individual
-Deal -->|observed by| Balance
-Production -->|telemetry to| Balance
-Network -->|feeds metrics to| Balance
-```
+- **Governance ↔ Group, Deal** — Governs structure and power (Planned)
+- **Belief System ← Network, Progression** — Cultural influence pipeline (Planned)
+- **Legal ← Deal** — Enforces and arbitrates agreements (Planned)
 
 ---
 
-## 5. Strategic Roles
+## 5. Strategic Roles (Updated)
 
-| Context           | Role       | Notes                                                      |
-| ----------------- | ---------- | ---------------------------------------------------------- |
-| Energy System     | Core       | Everything depends on energy capacity and regeneration     |
-| Individual        | Core       | Represents the atomic decision-maker and capability holder |
-| Production System | Core       | Primary means of expressing effort into value              |
-| Group             | Supporting | Aggregates individuals, increases complexity potential     |
-| Deal System       | Supporting | Orchestrates formal cooperation                            |
-| Network           | Generic    | Supports communication, reputation, and value propagation  |
-| Time System       | Generic    | Provides shared rhythm, buffs/debuffs, scheduling          |
-| Progression       | Supporting | Emergent identity and capability evolution                 |
-| Balance           | Generic    | Regulates feedback but not part of core gameplay decisions |
+| Context           | Role     | Notes                                                      |
+| ----------------- | -------- | ---------------------------------------------------------- |
+| Energy System     | Core     | Everything depends on energy capacity and regeneration     |
+| Individual        | Core     | Represents the atomic decision-maker and capability holder |
+| Production System | Core     | Primary means of expressing effort into value              |
+| Group             | Growth   | Evolving structures, internal specialization               |
+| Deal System       | Growth   | Enables law, policy, social order                          |
+| Network           | Growth   | Foundation for identity, belief, trust                     |
+| Time System       | Generic  | Provides shared rhythm, buffs/debuffs, scheduling          |
+| Progression       | Volatile | Highly dynamic, identity and cultural learning             |
+| Balance           | Volatile | Continuously adapts to emergent gameplay behavior          |
+| Governance        | Planned  | Enables structured collective decisions                    |
+| Legal             | Planned  | Manages interpretation and enforcement of rules            |
+| Belief System     | Planned  | Cultural lens and ideology transfer                        |
+| Infrastructure    | Planned  | Common resources, facilities, tech systems                 |
+| Memory            | Planned  | Encodes collective narrative and history                   |
 
 ---
 
-## 6. Capability Map
+## 6. Capability Map (Extended)
 
-| Capability                    | Implemented In            |
-| ----------------------------- | ------------------------- |
-| Manage personal energy        | Energy, Individual        |
-| Create products/services      | Production, Individual    |
-| Form and operate groups       | Group, Deal               |
-| Make and enforce agreements   | Deal System, Network      |
-| Trade and transmit value      | Energy (tokens), Network  |
-| Build identity and reputation | Individual, Network       |
-| Learn and specialize          | Progression, Production   |
-| Observe and adapt systems     | Balance, Deal, Production |
+| Capability                     | Implemented In                        |
+| ------------------------------ | ------------------------------------- |
+| Manage personal energy         | Energy, Individual                    |
+| Create products/services       | Production, Individual                |
+| Form and operate groups        | Group, Deal                           |
+| Make and enforce agreements    | Deal System, Network, Legal (planned) |
+| Trade and transmit value       | Energy (tokens), Network              |
+| Build identity and reputation  | Individual, Network                   |
+| Learn and specialize           | Progression, Production               |
+| Observe and adapt systems      | Balance, Deal, Production             |
+| Participate in governance      | Governance (planned), Group           |
+| Express worldview & belief     | Belief System (planned), Network      |
+| Share infrastructure           | Infrastructure (planned), Group       |
+| Build shared history/narrative | Memory (planned), Group, Network      |
 
 ---
 
@@ -132,13 +113,8 @@ Network -->|feeds metrics to| Balance
 - Communicate using **event-based messaging** (Observer Pattern across modules)
 - Apply **Mediator Pattern** for orchestrated systems like Deals & Network
 - Maintain **aggregate roots** (e.g., Group, Individual) for consistency boundaries
-
-### Example: GameEngine
-
-- Central entry point (`gameEngine.ts`) initializes and wires up all modules
-- Uses `IGameContext` to expose `eventBus`, `timeSystem`, and module registry
-- Enables creation of entities via factories (`defineIndividual`, `defineGroup`)
-- Drives time progression, action execution, and persistence
+- Plan for **hot-swapable modules** in volatile areas (e.g., Balance, Progression)
+- Add **feature toggles** to introduce experimental systems (e.g., Governance, Belief)
 
 ---
 
@@ -164,18 +140,31 @@ Max freedom for players causes uncontrolled complexity across domains.
 
 ---
 
-## 9. Evolution and Governance
+## 9. Evolution and Governance (Expanded)
 
-- Track context ownership — each context should have maintainers
-- Add new contexts via capability discovery (e.g. law, governance, religion?)
-- Update context map and strategic role assessments quarterly
-- Use event storming to explore new bounded contexts as features evolve
+### Evolution Strategy:
+
+- **Classify contexts**: Stable, Volatile, Growth, Planned
+- Use **capability discovery** to identify new bounded contexts
+- Evolve high-volatility modules in isolation (ActionLayer, Balance, Progression)
+- Schedule **quarterly reviews** of strategic roles and integrations
+- Use **event storming** and player telemetry to guide context evolution
+
+### Future Context Triggers:
+
+| Trigger                           | Potential Contexts |
+| --------------------------------- | ------------------ |
+| Complex group power dynamics      | Governance         |
+| Disputes and contract enforcement | Legal              |
+| Cultural divergence among players | Belief System      |
+| Need for shared infrastructure    | Infrastructure     |
+| Desire to preserve history        | Memory             |
 
 ---
 
 ## 10. References
 
-- "Domain-Driven Architecture Diagrams" — Nick Tune ([https://medium.com/nick-tune-tech-strategy-blog/domain-driven-architecture-diagrams-139a75acb578](https://medium.com/nick-tune-tech-strategy-blog/domain-driven-architecture-diagrams-139a75acb578))
+- "Domain-Driven Architecture Diagrams" — Nick Tune ([link](https://medium.com/nick-tune-tech-strategy-blog/domain-driven-architecture-diagrams-139a75acb578))
 - Game1 Core Documentation (2025-05)
 - Eric Evans, "Domain-Driven Design"
 - Vaughn Vernon, "Implementing DDD"
@@ -187,8 +176,7 @@ Max freedom for players causes uncontrolled complexity across domains.
 
 ### ✅ ENTITY: `Individual`
 
-Represents the **persistent personal profile** — who the person is and how they are currently doing.
-It is **passive**, containing identity and measurable internal state, but it makes no decisions.
+Represents the **persistent personal profile** — who the person is and how they are currently doing. It is **passive**, containing identity and measurable internal state, but it makes no decisions.
 
 **Contains only:**
 
@@ -213,8 +201,7 @@ It is **passive**, containing identity and measurable internal state, but it mak
 
 ### ✅ AGGREGATE: `IndividualAggregate`
 
-Coordinates **decision-making, rules, and behavioral transitions**.
-The aggregate ensures invariants, controls access to entity internals, and emits domain events.
+Coordinates **decision-making, rules, and behavioral transitions**. The aggregate ensures invariants, controls access to entity internals, and emits domain events.
 
 **Coordinates:**
 

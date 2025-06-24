@@ -24,9 +24,6 @@ import { Timeline } from './timeline.vo';
 import { Social } from './social.vo';
 import { Effects } from './effects.vo';
 
-// --- Constants ---
-const SLEEP_ENERGY_REGEN_PER_HOUR = 10;
-
 // --- Behavior Classes ---
 
 class PhysiologyBehavior {
@@ -105,9 +102,7 @@ class PsychologyBehavior {
   public emitDailyReflection(): void {
     // TODO: Summarize daily events and effects to create a meaningful reflection
     const reflection = 'A summary of the day...';
-    this.aggregate.emitEvent(
-      new IndividualDailyReflection(this.aggregate.id, reflection),
-    );
+    this.aggregate.emitEvent(new IndividualDailyReflection(this.aggregate.id, reflection));
   }
 }
 
@@ -147,10 +142,7 @@ export class IndividualAggregate extends AbstractAggregateRoot<EntityId> {
     this.social = new SocialBehavior(this);
   }
 
-  public static create(
-    props: { name: string },
-    id?: EntityId,
-  ): IndividualAggregate {
+  public static create(props: { name: string }, id?: EntityId): IndividualAggregate {
     const newId = id ?? uuidv4();
 
     // Create all the value objects for a new individual
