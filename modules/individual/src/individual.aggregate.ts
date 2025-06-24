@@ -48,7 +48,7 @@ class PhysiologyBehavior {
     const sleepDurationHours = sleepDurationMs / (1000 * 60 * 60);
 
     if (this.identity.energy.ratio >= 1 || sleepDurationHours >= 1) {
-      const energyRegen = Math.floor(sleepDurationHours * SLEEP_ENERGY_REGEN_PER_HOUR);
+      const energyRegen = Math.floor(sleepDurationHours * 10);
       this.identity.energy = this.identity.energy.regenerate(energyRegen);
       this.aggregate.emitEvent(
         new IndividualEnergyChanged(this.aggregate.id, this.identity.energy.current, energyRegen),
@@ -125,7 +125,7 @@ class SocialBehavior {
 
 // --- Aggregate Root ---
 export class IndividualAggregate extends AbstractAggregateRoot<EntityId> {
-  public identity: Individual;
+  private identity: Individual;
 
   // Behaviors
   private physiology: PhysiologyBehavior;
