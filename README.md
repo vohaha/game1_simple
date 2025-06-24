@@ -180,3 +180,60 @@ Max freedom for players causes uncontrolled complexity across domains.
 - Eric Evans, "Domain-Driven Design"
 - Vaughn Vernon, "Implementing DDD"
 - ChatGPT Game1 integration discussions (2025-06)
+
+---
+
+## 11. Entity vs Aggregate Responsibilities
+
+### ✅ ENTITY: `Individual`
+
+Represents the **persistent personal profile** — who the person is and how they are currently doing.
+It is **passive**, containing identity and measurable internal state, but it makes no decisions.
+
+**Contains only:**
+
+- 🧬 **Traits** — `energy`, `identity`
+- 🧪 **Vitals** — `health`, `hydration`, `fatigue`, `sleepSince`, etc.
+- 🧠 **Psychology** — `motivation`, `focus`, `stress`, `emotionalState`
+
+**Permitted methods:**
+
+- `currentEnergy()`
+- `updateEnergy(energy)`
+- Getters/accessors for internal state
+
+**🚫 Forbidden:**
+
+- Any behavior logic: `collapse()`, `recover()`, `performAction()`, etc.
+
+**📌 Analogy:**
+🗃 Like a **medical record + psychological profile**: it stores truth about the individual, but **does not interpret, react, or decide**.
+
+---
+
+### ✅ AGGREGATE: `IndividualAggregate`
+
+Coordinates **decision-making, rules, and behavioral transitions**.
+The aggregate ensures invariants, controls access to entity internals, and emits domain events.
+
+**Coordinates:**
+
+- ⏳ **Lifecycle hooks** — `beforeAction()`, `tick()`
+- 💥 **State transitions** — `collapseIfExhausted()`, `enterRecoveryState()`
+- 🛏️ **Physiological logic** — `startSleep()`, `wakeIfRecovered()`
+- 🧠 **Psychological reactions** — `applyStressThreshold()`, `adjustMotivation()`
+- 🧠 **Cognitive/emotional simulation** — `simulateCognitiveDrift()`, `emitDailyReflection()`
+- 👥 **Social behaviors** — `reactToGroupConflict()`, `evaluateGoalAlignment()`
+
+**Reads/Writes only via entity:**
+
+- `this.individual.vitals.fatigue`
+- `this.individual.psychology.stress`
+
+**🚫 Forbidden:**
+
+- Holding duplicated state from the entity (e.g. `this.stress = ...` ❌)
+
+**📌 Analogy:**
+🧠 Like the **central nervous system or subconscious process**:
+It monitors vitals and thoughts, then triggers **reactions, rules, and transitions**.

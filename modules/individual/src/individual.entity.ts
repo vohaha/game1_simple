@@ -1,19 +1,20 @@
-import { AbstractEntity, DomainError } from '@core/ddd';
+import { AbstractEntity } from '@core/ddd';
 import { EntityId } from '@core/types';
 import { Energy } from './energy.vo';
-import { Effects, IEffects } from './effects.vo';
-import { Learning, ILearning } from './learning.vo';
-import { Metadata, IMetadata } from './metadata.vo';
-import { Psychology, IPsychology } from './psychology.vo';
-import { Skills, ISkills } from './skills.vo';
-import { Social, ISocial } from './social.vo';
-import { Timeline, ITimeline } from './timeline.vo';
+import { Effects } from './effects.vo';
+import { Learning } from './learning.vo';
+import { Metadata } from './metadata.vo';
+import { Psychology } from './psychology.vo';
+import { Skills } from './skills.vo';
+import { Social } from './social.vo';
+import { Timeline } from './timeline.vo';
 
 /**
  * Represents an Individual entity in the game.
  * It has a unique identity and properties.
  */
 export class Individual extends AbstractEntity<EntityId> {
+  public readonly metadata: Metadata;
   public readonly energy: Energy;
   public readonly psychology: Psychology;
   public readonly skills: Skills;
@@ -21,10 +22,10 @@ export class Individual extends AbstractEntity<EntityId> {
   public readonly timeline: Timeline;
   public readonly social: Social;
   public readonly effects: Effects;
-  public readonly metadata: Metadata;
 
   private constructor(
     id: EntityId,
+    metadata: Metadata,
     energy: Energy,
     psychology: Psychology,
     skills: Skills,
@@ -32,9 +33,9 @@ export class Individual extends AbstractEntity<EntityId> {
     timeline: Timeline,
     social: Social,
     effects: Effects,
-    metadata: Metadata,
   ) {
     super(id);
+    this.metadata = metadata;
     this.energy = energy;
     this.psychology = psychology;
     this.skills = skills;
@@ -42,11 +43,11 @@ export class Individual extends AbstractEntity<EntityId> {
     this.timeline = timeline;
     this.social = social;
     this.effects = effects;
-    this.metadata = metadata;
   }
 
   public static create(
     id: EntityId,
+    metadata: Metadata,
     energy: Energy,
     psychology: Psychology,
     skills: Skills,
@@ -54,11 +55,10 @@ export class Individual extends AbstractEntity<EntityId> {
     timeline: Timeline,
     social: Social,
     effects: Effects,
-    metadata: Metadata,
   ): Individual {
-    IndividualInvariants.assertHasName(metadata);
     return new Individual(
       id,
+      metadata,
       energy,
       psychology,
       skills,
@@ -66,32 +66,6 @@ export class Individual extends AbstractEntity<EntityId> {
       timeline,
       social,
       effects,
-      metadata,
     );
-  }
-}
-
-class IndividualInvariants {
-  static assertHasName(metadata: Metadata): void {
-    if (!metadata.name) {
-      throw new MissingIndividualNameError();
-    }
-  }
-  static assertAwake(energy: Energy): void {
-    if (energy.current === 0) {
-      throw new AlreadySleepingError(energy);
-    }
-  }
-}
-
-class MissingIndividualNameError extends DomainError {
-  constructor() {
-    super('Individual name is required');
-  }
-}
-
-class AlreadySleepingError extends DomainError {
-  constructor(energy: Energy) {
-    super(`Individual is already sleeping since: <value>${energy.current}</value>`);
   }
 }

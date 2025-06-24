@@ -85,6 +85,12 @@ export function defineEnergyInvariants(props: IEnergy) {
         throw new InsufficientEnergyError(amount);
       }
     },
+
+    assertAwake(): void {
+      if (props.value === 0) {
+        throw new AlreadySleepingError(props);
+      }
+    },
   };
   return invariants;
 }
@@ -102,5 +108,11 @@ export class InvalidEnergyAmountError extends DomainError {
 export class InsufficientEnergyError extends DomainError {
   constructor(amount: EnergyValue) {
     super(`Insufficient energy: <value>${amount}</value>`);
+  }
+}
+
+export class AlreadySleepingError extends DomainError {
+  constructor(energy: IEnergy) {
+    super(`Individual is already sleeping since: <value>${energy.value}</value>`);
   }
 }

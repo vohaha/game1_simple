@@ -1,4 +1,4 @@
-import { AbstractValueObject } from '@core/ddd';
+import { AbstractValueObject, DomainError } from '@core/ddd';
 
 export interface IMetadata {
   name: string;
@@ -14,6 +14,15 @@ export class Metadata extends AbstractValueObject<IMetadata> {
   }
 
   public static create(props: IMetadata): Metadata {
+    if (!props.name?.trim()) {
+      throw new MissingIndividualNameError();
+    }
     return new Metadata(props);
+  }
+}
+
+export class MissingIndividualNameError extends DomainError {
+  constructor() {
+    super('Individual name is required');
   }
 }
