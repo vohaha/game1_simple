@@ -1,6 +1,6 @@
 import { AbstractEntity } from '@core/ddd';
 import { EntityId } from '@core/types';
-import { Energy } from '@modules/energy/src/energy.vo';
+import { Energy } from '@modules/individual/src/energy.vo';
 
 // TODO: Define properties for an individual.
 // For example, a name or other attributes.
@@ -34,4 +34,3 @@ export class Individual extends AbstractEntity<EntityId> {
     return new Individual(id, props);
   }
 }
-
