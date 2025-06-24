@@ -1,17 +1,17 @@
 import { AbstractValueObject, DomainError } from '@core/ddd';
 
 type EnergyValue = number;
-export interface EnergyProps {
+export interface IEnergy {
   value: EnergyValue;
   max: EnergyValue;
 }
 
-export class Energy extends AbstractValueObject<EnergyProps> {
-  private constructor(props: EnergyProps) {
+export class Energy extends AbstractValueObject<IEnergy> {
+  private constructor(props: IEnergy) {
     super(props);
   }
 
-  public static create(props: EnergyProps): Energy {
+  public static create(props: IEnergy): Energy {
     const invariants = defineEnergyInvariants(props);
     invariants.assertValidEnergyValue(props.value);
     invariants.assertValidEnergyValue(props.max);
@@ -64,7 +64,7 @@ export class Energy extends AbstractValueObject<EnergyProps> {
   }
 }
 
-export function defineEnergyInvariants(props: EnergyProps) {
+export function defineEnergyInvariants(props: IEnergy) {
   const invariants = {
     assertValidEnergyValue(value: EnergyValue): void {
       if (value <= 0 || value > props.max) {

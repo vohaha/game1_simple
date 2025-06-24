@@ -1,37 +1,39 @@
 import { AbstractEntity, DomainError } from '@core/ddd';
 import { EntityId } from '@core/types';
 import { Energy } from './energy.vo';
-import { ISleepRecoveryStrategy } from './sleep-recovery.strategy';
 
-export interface Metadata {
+export interface IMetadata {
   name: string;
 }
 
-export interface Vitals {}
-
-export interface Psychology {
-  // Define psychology-related properties here
-  energy: Energy;
+export interface IPsychology {
+  morale: number;
+  stress: number;
 }
 
-export interface Skills {
-  // Define skills-related properties here
+export interface ISkills {
+  combat: number;
+  crafting: number;
+  medicine: number;
 }
 
-export interface Learning {
-  // Define learning-related properties here
+export interface ILearning {
+  currentTopic: string;
+  progress: number;
 }
 
-export interface Timeline {
-  // Define timeline-related properties here
+export interface ITimeline {
+  age: number;
+  birthDate: Date;
 }
 
-export interface Social {
-  // Define social-related properties here
+export interface ISocial {
+  friends: string[];
+  reputation: number;
 }
 
-export interface Effects {
-  // Define effects-related properties here
+export interface IEffects {
+  active: string[];
 }
 
 /**
@@ -39,8 +41,7 @@ export interface Effects {
  * It has a unique identity and properties.
  */
 export class Individual extends AbstractEntity<EntityId> {
-  public readonly vitals: Vitals;
-
+  public readonly energy: Energy;
   public readonly psychology: Psychology;
   public readonly skills: Skills;
   public readonly learning: Learning;
@@ -51,7 +52,7 @@ export class Individual extends AbstractEntity<EntityId> {
 
   private constructor(
     id: EntityId,
-    vitals: Vitals,
+    energy: Energy,
     psychology: Psychology,
     skills: Skills,
     learning: Learning,
@@ -61,7 +62,7 @@ export class Individual extends AbstractEntity<EntityId> {
     metadata: Metadata,
   ) {
     super(id);
-    this.vitals = vitals;
+    this.energy = energy;
     this.psychology = psychology;
     this.skills = skills;
     this.learning = learning;
@@ -73,7 +74,7 @@ export class Individual extends AbstractEntity<EntityId> {
 
   public static create(
     id: EntityId,
-    traits: Metadata,
+    energy: Energy,
     psychology: Psychology,
     skills: Skills,
     learning: Learning,
@@ -82,10 +83,10 @@ export class Individual extends AbstractEntity<EntityId> {
     effects: Effects,
     metadata: Metadata,
   ): Individual {
-    IndividualInvariants.assertHasName(traits);
+    IndividualInvariants.assertHasName(metadata);
     return new Individual(
       id,
-      traits,
+      energy,
       psychology,
       skills,
       learning,
@@ -98,14 +99,14 @@ export class Individual extends AbstractEntity<EntityId> {
 }
 
 class IndividualInvariants {
-  static assertHasName(individual: Individual): void {
-    if (!individual.metadata.name) {
+  static assertHasName(metadata: Metadata): void {
+    if (!metadata.name) {
       throw new MissingIndividualNameError();
     }
   }
-  static assertAwake(individual: Individual): void {
-    if (individual.vitals) {
-      throw new AlreadySleepingError(vitals);
+  static assertAwake(energy: Energy): void {
+    if (energy.current === 0) {
+      throw new AlreadySleepingError(energy);
     }
   }
 }
@@ -118,7 +119,125 @@ class MissingIndividualNameError extends DomainError {
 
 // error when individual already in sleep mode
 class AlreadySleepingError extends DomainError {
-  constructor(individual: Individual) {
-    super(`Individual is already sleeping since: <value>${individual.vitals}</value>`);
+  constructor(energy: Energy) {
+    super(`Individual is already sleeping since: <value>${energy.current}</value>`);
   }
 }
+
+// Value Objects for each interface
+
+export class Psychology implements IPsychology {
+  public readonly morale: number;
+  public readonly stress: number;
+
+  private constructor(morale: number, stress: number) {
+    this.morale = morale;
+    this.stress = stress;
+  }
+
+  public static create(
+    morale = 50,
+    stress = 0
+  ): Psychology {
+    return new Psychology(morale, stress);
+  }
+}
+
+export class Skills implements ISkills {
+  public readonly combat: number;
+  public readonly crafting: number;
+  public readonly medicine: number;
+
+  private constructor(combat: number, crafting: number, medicine: number) {
+    this.combat = combat;
+    this.crafting = crafting;
+    this.medicine = medicine;
+  }
+
+  public static create(
+    combat = 1,
+    crafting = 1,
+    medicine = 1
+  ): Skills {
+    return new Skills(combat, crafting, medicine);
+  }
+}
+
+export class Learning implements ILearning {
+  public readonly currentTopic: string;
+  public readonly progress: number;
+
+  private constructor(currentTopic: string, progress: number) {
+    this.currentTopic = currentTopic;
+    this.progress = progress;
+  }
+
+  public static create(
+    currentTopic = 'None',
+    progress = 0
+  ): Learning {
+    return new Learning(currentTopic, progress);
+  }
+}
+
+export class Timeline implements Timeline {
+  public readonly age: number;
+  public readonly birthDate: Date;
+
+  private constructor(age: number, birthDate: Date) {
+    this.age = age;
+    this.birthDate = birthDate;
+  }
+
+  public static create(
+    age = 18,
+    birthDate = new Date(2000, 0, 1)
+  ): Timeline {
+    return new Timeline(age, birthDate);
+  }
+}
+
+export class Social implements Social {
+  public readonly friends: string[];
+  public readonly reputation: number;
+
+  private constructor(friends: string[], reputation: number) {
+    this.friends = friends;
+    this.reputation = reputation;
+  }
+
+  public static create(
+    friends: string[] = [],
+    reputation = 0
+  ): Social {
+    return new Social(friends, reputation);
+  }
+}
+
+export class Effects implements IEffects {
+  public readonly active: string[];
+
+  private constructor(active: string[]) {
+    this.active = active;
+  }
+
+  public static create(
+    active: string[] = []
+  ): Effects {
+    return new Effects(active);
+  }
+}
+
+export class Metadata implements IMetadata {
+  public readonly name: string;
+
+  private constructor(name: string) {
+    this.name = name;
+  }
+
+  public static create(
+    name: string
+  ): Metadata {
+    return new Metadata(name);
+  }
+} 

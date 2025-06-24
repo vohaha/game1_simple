@@ -1,5 +1,5 @@
 import { AbstractAggregateRoot } from '@core/ddd';
-import { Vitals, Individual, Metadata } from './individual.entity';
+import { Individual, IMetadata } from './individual.entity';
 import { EntityId } from '@core/types';
 import {
   IndividualCreated,
@@ -82,7 +82,7 @@ export class IndividualAggregate extends AbstractAggregateRoot<EntityId> {
     this.physiology = new PhysiologyBehavior(this, physiology);
   }
 
-  public static awaken(id: EntityId, props: Omit<Metadata, 'energy'>): IndividualAggregate {
+  public static awaken(id: EntityId, props: Omit<IMetadata, 'energy'>): IndividualAggregate {
     const initialEnergy = Energy.create({ value: 100, max: 100 });
     const individual = Individual.create(id, { ...props, energy: initialEnergy });
     const aggregate = new IndividualAggregate(individual);
