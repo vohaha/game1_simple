@@ -26,14 +26,40 @@ export class Energy extends AbstractValueObject<EnergyProps> {
     return this.props.value;
   }
 
+  public get max(): number {
+    return this.props.max;
+  }
+
+  public get ratio(): number {
+    return this.current / this.max;
+  }
+
+  public isBelow(threshold: number): boolean {
+    return this.ratio < threshold;
+  }
+
+  public increaseBy(amount: number): Energy {
+    this.invariants.assertValidEnergyAmount(amount);
+    const newCurrent = Math.min(this.current + amount, this.max);
+    return new Energy({ ...this.props, value: newCurrent });
+  }
+
+  public decreaseBy(amount: number): Energy {
+    return this.spend(amount);
+  }
+
+  public isDepleted(): boolean {
+    return this.current <= 0;
+  }
+
   public spend(amount: number): Energy {
-    this.invariants.assertHasEnoughEnergy(this.props.value, amount);
-    return new Energy({ ...this.props, value: this.props.value - amount });
+    this.invariants.assertHasEnoughEnergy(this.current, amount);
+    return new Energy({ ...this.props, value: this.current - amount });
   }
 
   public regenerate(amount: number): Energy {
     this.invariants.assertValidEnergyAmount(amount);
-    const newCurrent = Math.min(this.props.value + amount, this.props.max);
+    const newCurrent = Math.min(this.current + amount, this.max);
     return new Energy({ ...this.props, value: newCurrent });
   }
 }

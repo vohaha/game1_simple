@@ -1,40 +1,32 @@
 import { AbstractAggregateRoot } from '@core/ddd';
-import { Individual, IndividualProps } from './individual.entity';
+import { IIndividualState, Individual, IndividualProps } from './individual.entity';
 import { EntityId } from '@core/types';
 import { IndividualCreated, IndividualEnergyChanged } from './individual.events';
-import { Energy } from '@modules/energy/src/energy.vo';
+import { Energy } from './energy.vo';
+
+interface IIndividualSate {
+  lastSleepAt: Date;
+}
+
+const initialPhysiology: IIndividualSate = {
+  lastSleepAt: new Date(),
+};
 
 export class IndividualAggregate extends AbstractAggregateRoot<EntityId> {
-  public individual: Individual;
+  public identity: Individual;
+  public physiology: IIndividualSate;
 
-  private constructor(individual: Individual) {
+  private constructor(individual: Individual, state: IIndividualSate) {
     super(individual.id);
-    this.individual = individual;
+    this.identity = individual;
+    this.physiology = state ?? initialPhysiology;
   }
 
-  public static create(id: EntityId, props: Omit<IndividualProps, 'energy'>): IndividualAggregate {
-    const initialEnergy = Energy.create({ current: 100, max: 100 });
+  public static awaken(id: EntityId, props: Omit<IndividualProps, 'energy'>): IndividualAggregate {
+    const initialEnergy = Energy.create({ value: 100, max: 100 });
     const individual = Individual.create(id, { ...props, energy: initialEnergy });
     const aggregate = new IndividualAggregate(individual);
     aggregate.addDomainEvent(new IndividualCreated(aggregate.id));
     return aggregate;
   }
-
-  public spendEnergy(amount: number): void {
-    const newEnergy = this.individual.props.energy.spend(amount);
-    this.individual.props.energy = newEnergy;
-    this.addDomainEvent(
-      new IndividualEnergyChanged(this.id, newEnergy.current, -amount),
-    );
-  }
-
-  public regenerateEnergy(amount: number): void {
-    const newEnergy = this.individual.props.energy.regenerate(amount);
-    this.individual.props.energy = newEnergy;
-    this.addDomainEvent(
-      new IndividualEnergyChanged(this.id, newEnergy.current, amount),
-    );
-  }
 }
-
-
