@@ -8,26 +8,29 @@ import { Psychology } from './psychology.vo';
 import { Skills } from './skills.vo';
 import { Social } from './social.vo';
 import { Timeline } from './timeline.vo';
+import { Physiology } from './physiology.vo';
 
 /**
  * Represents an Individual entity in the game.
  * It has a unique identity and properties.
  */
 export class Individual extends AbstractEntity<EntityId> {
-  public readonly metadata: Metadata;
-  public readonly energy: Energy;
-  public readonly psychology: Psychology;
-  public readonly skills: Skills;
-  public readonly learning: Learning;
-  public readonly timeline: Timeline;
-  public readonly social: Social;
-  public readonly effects: Effects;
+  public metadata: Metadata;
+  public energy: Energy;
+  public psychology: Psychology;
+  public physiology: Physiology;
+  public skills: Skills;
+  public learning: Learning;
+  public timeline: Timeline;
+  public social: Social;
+  public effects: Effects;
 
   private constructor(
     id: EntityId,
     metadata: Metadata,
     energy: Energy,
     psychology: Psychology,
+    physiology: Physiology,
     skills: Skills,
     learning: Learning,
     timeline: Timeline,
@@ -38,6 +41,7 @@ export class Individual extends AbstractEntity<EntityId> {
     this.metadata = metadata;
     this.energy = energy;
     this.psychology = psychology;
+    this.physiology = physiology;
     this.skills = skills;
     this.learning = learning;
     this.timeline = timeline;
@@ -50,6 +54,7 @@ export class Individual extends AbstractEntity<EntityId> {
     metadata: Metadata,
     energy: Energy,
     psychology: Psychology,
+    physiology: Physiology,
     skills: Skills,
     learning: Learning,
     timeline: Timeline,
@@ -61,6 +66,7 @@ export class Individual extends AbstractEntity<EntityId> {
       metadata,
       energy,
       psychology,
+      physiology,
       skills,
       learning,
       timeline,

@@ -4,7 +4,7 @@ import { EntityId } from '@core/types';
 export class IndividualCreated extends DomainEvent {
   public readonly eventType = 'individual.created';
 
-  constructor(aggregateId: EntityId) {
+  constructor(public readonly aggregateId: EntityId) {
     super(aggregateId);
   }
 }
@@ -13,9 +13,44 @@ export class IndividualEnergyChanged extends DomainEvent {
   public readonly eventType = 'individual.energy.changed';
 
   constructor(
-    aggregateId: EntityId,
+    public readonly aggregateId: EntityId,
     public readonly current: number,
     public readonly change: number,
+  ) {
+    super(aggregateId);
+  }
+}
+
+export class IndividualCollapsed extends DomainEvent {
+  public readonly eventType = 'individual.collapsed';
+
+  constructor(public readonly aggregateId: EntityId) {
+    super(aggregateId);
+  }
+}
+
+export class IndividualOverwhelmed extends DomainEvent {
+  public readonly eventType = 'individual.overwhelmed';
+
+  constructor(public readonly aggregateId: EntityId) {
+    super(aggregateId);
+  }
+}
+
+export class IndividualEnteredRecovery extends DomainEvent {
+  public readonly eventType = 'individual.entered_recovery';
+
+  constructor(public readonly aggregateId: EntityId) {
+    super(aggregateId);
+  }
+}
+
+export class IndividualDailyReflection extends DomainEvent {
+  public readonly eventType = 'individual.daily_reflection';
+
+  constructor(
+    public readonly aggregateId: EntityId,
+    public readonly reflection: string,
   ) {
     super(aggregateId);
   }
