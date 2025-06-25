@@ -125,7 +125,7 @@ class SocialBehavior {
 
 // --- Aggregate Root ---
 export class IndividualAggregate extends AbstractAggregateRoot<EntityId> {
-  private identity: Individual;
+  public identity: Individual;
 
   // Behaviors
   private physiology: PhysiologyBehavior;
