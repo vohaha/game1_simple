@@ -182,3 +182,31 @@ class NotSpecification<T> extends AbstractSpecification<T> {
     return !this.spec.isSatisfiedBy(candidate);
   }
 }
+
+export class Invariants {
+  private errors: DomainError[] = [];
+
+  public add(error: DomainError): void {
+    this.errors.push(error);
+  }
+
+  public check(condition: boolean, error: DomainError): void {
+    if (!condition) {
+      this.add(error);
+    }
+  }
+
+  public assert(): void {
+    if (this.errors.length > 0) {
+      const combinedMessage = this.errors.map((e) => e.message).join(', ');
+      this.errors = [];
+      throw new ValidationError(combinedMessage);
+    }
+  }
+}
+
+export class ValidationError extends DomainError {
+  constructor(message: string) {
+    super(message);
+  }
+}

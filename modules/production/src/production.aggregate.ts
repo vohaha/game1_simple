@@ -1,5 +1,5 @@
 import { AbstractAggregateRoot } from '../../../core/ddd';
-import { Product, ProductProps } from './product.entity';
+import { Product, ШЗкщвгсе } from './product.entity';
 import { EntityId } from '../../../core/types';
 import { ProductionStarted } from './production.events';
 
@@ -11,11 +11,10 @@ export class ProductionAggregate extends AbstractAggregateRoot<EntityId> {
     this.product = product;
   }
 
-  public static create(id: EntityId, props: ProductProps): ProductionAggregate {
+  public static create(id: EntityId, props: ШЗкщвгсе): ProductionAggregate {
     const product = Product.create(id, props);
     const aggregate = new ProductionAggregate(product);
     aggregate.addDomainEvent(new ProductionStarted(aggregate.id));
     return aggregate;
   }
 }
-
