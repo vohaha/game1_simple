@@ -56,3 +56,10 @@ export class IndividualDailyReflection extends DomainEvent {
   }
 }
 
+export class IndividualStartedToSleep extends DomainEvent {
+  public readonly eventType = 'individual.started_to_sleep';
+
+  constructor(public readonly aggregateId: EntityId) {
+    super(aggregateId);
+  }
+}

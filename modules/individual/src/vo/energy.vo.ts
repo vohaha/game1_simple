@@ -12,14 +12,13 @@ export class Energy extends AbstractValueObject<IEnergy> {
   }
 
   public static create(props: IEnergy): Energy {
-    const invariants = new Invariants();
-    invariants.check(props.value > 0, new InvalidEnergyValueError(props.value));
-    invariants.check(props.max > 0, new InvalidEnergyValueError(props.max));
-    invariants.check(
-      props.value <= props.max,
+    Energy.invariants.check(() => props.value > 0, new InvalidEnergyValueError(props.value));
+    Energy.invariants.check(() => props.max > 0, new InvalidEnergyValueError(props.max));
+    Energy.invariants.check(
+      () => props.value >= props.max,
       new InvalidEnergyValueRangeError(props.value, props.max),
     );
-    invariants.assert();
+    Energy.invariants.assert();
     return new Energy(props);
   }
 
@@ -40,39 +39,17 @@ export class Energy extends AbstractValueObject<IEnergy> {
   }
 
   public increaseBy(amount: number): Energy {
-    const invariants = new Invariants();
-    invariants.check(amount > 0, new InvalidEnergyAmountError(amount));
-    invariants.assert();
-    const newCurrent = Math.min(this.current + amount, this.max);
-    return new Energy({ ...this.props, value: newCurrent });
+    Energy.invariants.check(() => amount > 0, new InvalidEnergyAmountError(amount));
+    return Energy.create({ ...this.props, value: this.current + amount });
   }
 
   public decreaseBy(amount: number): Energy {
-    const invariants = new Invariants();
-    invariants.check(amount > 0, new InvalidEnergyAmountError(amount));
-    invariants.assert();
-    const newCurrent = Math.max(this.current - amount, 0);
-    return new Energy({ ...this.props, value: newCurrent });
+    Energy.invariants.check(() => amount > 0, new InvalidEnergyAmountError(amount));
+    return Energy.create({ ...this.props, value: this.current - amount });
   }
 
   public isDepleted(): boolean {
-    return this.current <= 0;
-  }
-
-  public spend(amount: number): Energy {
-    const invariants = new Invariants();
-    invariants.check(amount > 0, new InvalidEnergyAmountError(amount));
-    invariants.check(this.current <= amount, new InsufficientEnergyError(this.current, amount));
-    invariants.assert();
-    return new Energy({ ...this.props, value: this.current - amount });
-  }
-
-  public regenerate(amount: number): Energy {
-    const invariants = new Invariants();
-    invariants.check(amount > 0, new InvalidEnergyAmountError(amount));
-    invariants.assert();
-    const newCurrent = Math.min(this.current + amount, this.max);
-    return new Energy({ ...this.props, value: newCurrent });
+    return this.current === 0;
   }
 }
 

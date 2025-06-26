@@ -1,14 +1,14 @@
 import { AbstractEntity } from '@core/ddd';
 import { EntityId } from '@core/types';
-import { Energy } from './energy.vo';
-import { Effects } from './effects.vo';
-import { Learning } from './learning.vo';
-import { Metadata } from './metadata.vo';
-import { Psychology } from './psychology.vo';
-import { Skills } from './skills.vo';
-import { Social } from './social.vo';
-import { Timeline } from './timeline.vo';
-import { Physiology } from './physiology.vo';
+import { Energy } from './vo/energy.vo';
+import { Effects } from './vo/effects.vo';
+import { Learning } from './vo/learning.vo';
+import { Metadata } from './vo/metadata.vo';
+import { Psychology } from './vo/psychology.vo';
+import { Skills } from './vo/skills.vo';
+import { Social } from './vo/social.vo';
+import { Timeline } from './vo/timeline.vo';
+import { Physiology } from './vo/physiology.vo';
 
 /**
  * Represents an Individual entity in the game.

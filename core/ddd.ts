@@ -4,26 +4,6 @@ import { EntityId } from './types';
 // These are reusable, domain-agnostic base contracts and abstract classes
 // representing the foundational building blocks of Domain-Driven Design
 
-// 1. Value Object
-export interface ValueObject<T> {
-  equals(other: ValueObject<T>): boolean;
-}
-
-export abstract class AbstractValueObject<T extends object> implements ValueObject<T> {
-  protected readonly props: T;
-
-  constructor(props: T) {
-    this.props = Object.freeze(props);
-  }
-
-  public equals(other: AbstractValueObject<T>): boolean {
-    if (other === null || other === undefined) {
-      return false;
-    }
-    return JSON.stringify(this.props) === JSON.stringify(other.props);
-  }
-}
-
 // 2. Entity
 export interface Entity<ID> {
   id: ID;
@@ -190,8 +170,8 @@ export class Invariants {
     this.errors.push(error);
   }
 
-  public check(condition: boolean, error: DomainError): void {
-    if (!condition) {
+  public check(condition: () => boolean, error: DomainError): void {
+    if (!condition()) {
       this.add(error);
     }
   }
@@ -208,5 +188,87 @@ export class Invariants {
 export class ValidationError extends DomainError {
   constructor(message: string) {
     super(message);
+  }
+}
+
+// 1. Value Object
+export interface ValueObject<T> {
+  equals(other: ValueObject<T>): boolean;
+}
+
+export abstract class AbstractValueObject<T extends object> implements ValueObject<T> {
+  protected readonly props: T;
+
+  constructor(props: T) {
+    this.props = Object.freeze(props);
+  }
+
+  private static readonly _invariants = new Invariants();
+
+  public static get invariants() {
+    return this._invariants;
+  }
+
+  public equals(other: AbstractValueObject<T>): boolean {
+    if (other === null || other === undefined) {
+      return false;
+    }
+    return JSON.stringify(this.props) === JSON.stringify(other.props);
+  }
+}
+
+export class DomainTime {
+  private readonly timestamp: number;
+
+  private constructor(timestamp: number) {
+    this.timestamp = timestamp;
+  }
+
+  static now(): DomainTime {
+    return new DomainTime(Date.now());
+  }
+
+  static fromTimestamp(ms: number): DomainTime {
+    return new DomainTime(ms);
+  }
+
+  static fromDate(date: Date): DomainTime {
+    return new DomainTime(date.getTime());
+  }
+
+  toTimestamp(): number {
+    return this.timestamp;
+  }
+
+  toDate(): Date {
+    return new Date(this.timestamp);
+  }
+
+  diffMs(other: DomainTime): number {
+    return this.timestamp - other.timestamp;
+  }
+
+  isBefore(other: DomainTime): boolean {
+    return this.timestamp < other.timestamp;
+  }
+
+  isAfter(other: DomainTime): boolean {
+    return this.timestamp > other.timestamp;
+  }
+
+  addMs(ms: number): DomainTime {
+    return new DomainTime(this.timestamp + ms);
+  }
+
+  hasElapsedSince(other: DomainTime, durationMs: number): boolean {
+    return this.timestamp - other.timestamp >= durationMs;
+  }
+
+  equals(other: DomainTime): boolean {
+    return this.timestamp === other.timestamp;
+  }
+
+  isInFuture(): boolean {
+    return this.timestamp > Date.now();
   }
 }
