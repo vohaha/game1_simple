@@ -170,9 +170,9 @@ export class Invariants {
     this.errors.push(error);
   }
 
-  public check(condition: () => boolean, error: DomainError): void {
+  public check(condition: () => boolean, error: () => DomainError): void {
     if (!condition()) {
-      this.add(error);
+      this.add(error());
     }
   }
 

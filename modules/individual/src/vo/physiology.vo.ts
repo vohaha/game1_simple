@@ -17,12 +17,12 @@ export class Physiology extends AbstractValueObject<IPhysiology> {
     if (lastSleepSince != null) {
       Physiology.invariants.check(
         () => !isNaN(lastSleepSince.toTimestamp()),
-        new InvalidSleepTimestampError(lastSleepSince),
+        () => new InvalidSleepTimestampError(lastSleepSince),
       );
 
       Physiology.invariants.check(
         () => !lastSleepSince.isInFuture(),
-        new SleepInFutureError(lastSleepSince),
+        () => new SleepInFutureError(lastSleepSince),
       );
     }
 
@@ -43,12 +43,12 @@ export class Physiology extends AbstractValueObject<IPhysiology> {
   }
 
   public markSleepStarted(): Physiology {
-    Physiology.invariants.check(() => this.isAwake(), new AlreadySleepingError(this.sleepSince!));
+    Physiology.invariants.check(() => this.isAwake(), () => new AlreadySleepingError(this.sleepSince!));
     return Physiology.create({ ...this.props, sleepSince: DomainTime.now() });
   }
 
   public markSleepEnded(): Physiology {
-    Physiology.invariants.check(() => this.isSleeping(), new NotSleepingError());
+    Physiology.invariants.check(() => this.isSleeping(), () => new NotSleepingError());
     return Physiology.create({ ...this.props, sleepSince: null });
   }
 }

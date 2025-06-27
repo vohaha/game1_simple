@@ -12,11 +12,11 @@ export class Energy extends AbstractValueObject<IEnergy> {
   }
 
   public static create(props: IEnergy): Energy {
-    Energy.invariants.check(() => props.value > 0, new InvalidEnergyValueError(props.value));
-    Energy.invariants.check(() => props.max > 0, new InvalidEnergyValueError(props.max));
+    Energy.invariants.check(() => props.value > 0, () => new InvalidEnergyValueError(props.value));
+    Energy.invariants.check(() => props.max > 0, () => new InvalidEnergyValueError(props.max));
     Energy.invariants.check(
       () => props.value >= props.max,
-      new InvalidEnergyValueRangeError(props.value, props.max),
+      () => new InvalidEnergyValueRangeError(props.value, props.max),
     );
     Energy.invariants.assert();
     return new Energy(props);
@@ -39,12 +39,12 @@ export class Energy extends AbstractValueObject<IEnergy> {
   }
 
   public increaseBy(amount: number): Energy {
-    Energy.invariants.check(() => amount > 0, new InvalidEnergyAmountError(amount));
+    Energy.invariants.check(() => amount > 0, () => new InvalidEnergyAmountError(amount));
     return Energy.create({ ...this.props, value: this.current + amount });
   }
 
   public decreaseBy(amount: number): Energy {
-    Energy.invariants.check(() => amount > 0, new InvalidEnergyAmountError(amount));
+    Energy.invariants.check(() => amount > 0, () => new InvalidEnergyAmountError(amount));
     return Energy.create({ ...this.props, value: this.current - amount });
   }
 
@@ -75,11 +75,5 @@ export class InvalidEnergyAmountError extends DomainError {
 export class InsufficientEnergyError extends DomainError {
   constructor(current: EnergyValue, amount: EnergyValue) {
     super(`Insufficient energy: <current>${current}</current>, <amount>${amount}</amount>`);
-  }
-}
-
-export class AlreadySleepingError extends DomainError {
-  constructor(energy: IEnergy) {
-    super(`Individual is already sleeping since: <value>${energy.value}</value>`);
   }
 }

@@ -15,7 +15,7 @@ export class DefaultSleepRecoveryStrategy implements ISleepRecoveryStrategy {
   constructor(private readonly fullRestHours: number = 7) {}
 
   compute(hours: number, individual: Individual): number {
-    const max = individual.props.energy.max;
+    const max = individual.energy.max;
     const ratio = Math.min(hours / this.fullRestHours, 1);
     return Math.floor(ratio * max);
   }
