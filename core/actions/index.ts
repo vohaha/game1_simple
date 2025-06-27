@@ -100,7 +100,10 @@ export class CreateProductHandler implements IActionHandler<CreateProductAction>
     }
 
     individual.updateEnergy(individual.currentEnergy() - energyRequired);
-    const product = await context.production.createProduct(action.payload.description, individual.id);
+    const product = await context.production.createProduct(
+      action.payload.description,
+      individual.id,
+    );
     await context.inventory.storeProduct(individual.id, product);
   }
 }

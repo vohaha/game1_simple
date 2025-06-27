@@ -6,12 +6,12 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "esbuild src/index.ts --bundle --platform=node --target=esnext --outdir=dist --sourcemap",
-    "dev": "esbuild ./src/index.ts ./src/sandbox_server.ts --bundle --platform=node --target=esnext --outdir=dist --sourcemap --watch",
+    "dev": "esbuild ./modules/index.ts --bundle --platform=node --target=esnext --outdir=dist --sourcemap --watch",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
     "lint": "eslint 'src/**/*.ts'",
     "format": "prettier --write 'src/**/*.ts'",
-    "sandbox": "ts-node-dev --respawn ./dist/sandbox_server.js"
+    "sandbox": "tsnd --respawn ./modules/index.ts"
   },
   "files": [
     "dist"

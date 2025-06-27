@@ -1,7 +1,6 @@
-import { AbstractAggregateRoot, DomainEvent } from '@core/ddd';
+import { AbstractAggregateRoot, DomainEvent, DomainTime } from '@core/ddd';
 import { EntityId } from '@core/types';
 import { IAction } from '@core/actions';
-import { v4 as uuidv4 } from 'uuid';
 
 import { Individual } from './individual.entity';
 import {
@@ -12,6 +11,7 @@ import {
   IndividualEnteredRecovery,
   IndividualDailyReflection,
   IndividualStartedToSleep,
+  IndividualEndedSleep,
 } from './individual.events';
 
 // Value Objects
@@ -25,35 +25,39 @@ import {
   Timeline,
   Social,
   Effects,
+  Identity,
 } from './vo';
 
 // --- Behavior Classes ---
 
 class PhysiologyBehavior {
-  constructor(private aggregate: IndividualAggregate) {}
-
-  private get identity() {
-    return this.aggregate.identity;
-  }
+  constructor(private individual: Individual) {}
 
   startSleep() {
-    this.identity.physiology = this.identity.physiology.markSleepStarted();
+    this.individual.physiology = this.individual.physiology.markSleepStarted();
+  }
+
+  endSleep() {
+    const sleepSince = this.individual.physiology.sleepSince;
+    this.individual.physiology = this.individual.physiology.markSleepEnded();
+    const sleepDurationMs = DomainTime.now().diffMs(sleepSince!);
+    return sleepDurationMs;
   }
 }
 
 export class IndividualAggregate extends AbstractAggregateRoot<EntityId> {
-  public identity: Individual;
+  protected individual: Individual;
   private physiology: PhysiologyBehavior;
 
   private constructor(individual: Individual) {
     super(individual.id);
-    this.identity = individual;
-    this.physiology = new PhysiologyBehavior(this);
+    this.individual = individual;
+    this.physiology = new PhysiologyBehavior(this.individual);
   }
 
-  public static create(props: { name: string }, id?: EntityId): IndividualAggregate {
-    const newId = id ?? uuidv4();
-    const metadata = Metadata.create({ name: props.name });
+  public static create(id: string, name: string): IndividualAggregate {
+    const newId = id;
+    const metadata = Metadata.create({ name });
     const energy = Energy.create({ value: 100, max: 100 });
     const psychology = Psychology.create({});
     const physiology = Physiology.create({});
@@ -81,10 +85,15 @@ export class IndividualAggregate extends AbstractAggregateRoot<EntityId> {
     return aggregate;
   }
 
-  public rehydrate(): void {}
+  public sync(): void {}
 
   public startSleep(): void {
     this.physiology.startSleep();
     this.addDomainEvent(new IndividualStartedToSleep(this.id));
+  }
+
+  public endSleep(): void {
+    const sleepDuration = this.physiology.endSleep();
+    this.addDomainEvent(new IndividualEndedSleep(this.id, sleepDuration));
   }
 }

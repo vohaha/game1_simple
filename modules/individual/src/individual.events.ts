@@ -63,3 +63,14 @@ export class IndividualStartedToSleep extends DomainEvent {
     super(aggregateId);
   }
 }
+
+export class IndividualEndedSleep extends DomainEvent {
+  public readonly eventType = 'individual.ended_sleep';
+
+  constructor(
+    public readonly aggregateId: EntityId,
+    public sleepDurationMs: number,
+  ) {
+    super(aggregateId);
+  }
+}
