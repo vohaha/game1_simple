@@ -35,4 +35,24 @@ export class TimeUtils {
     if (from == null || to == null) return null;
     return to - from;
   }
+
+  static isTimestampValid(timestamp: number): boolean {
+    return !isNaN(timestamp);
+  }
+
+  static toHours(durationMs: number): number {
+    return Math.floor(durationMs / 3600000);
+  }
+
+  static toMinutes(durationMs: number): number {
+    return Math.floor(durationMs / 60000);
+  }
+
+  static toSeconds(durationMs: number): number {
+    return Math.floor(durationMs / 1000);
+  }
+
+  static toMilliseconds(durationMs: number): number {
+    return durationMs;
+  }
 }

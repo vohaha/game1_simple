@@ -1,4 +1,4 @@
-import { AbstractValueObject, DomainError } from '@core/ddd';
+import { AbstractValueObject, DomainError } from '../../../core/ddd';
 
 export interface IMetadata {
   name: string;

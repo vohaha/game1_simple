@@ -1,14 +1,14 @@
+import { v4 as uuidv4 } from 'uuid';
 import Fastify from 'fastify';
 import { engine } from '../engine';
-
-engine.init();
 
 const fastify = Fastify({
   logger: true,
 });
 
 fastify.get('/', async (request, reply) => {
-  return { hello: 'world' };
+  const player = engine.createPlayer(uuidv4(), 'vohaha');
+  return player.snapshot;
 });
 
 const start = async () => {

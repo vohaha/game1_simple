@@ -1,34 +1,16 @@
-import { AbstractAggregateRoot, DomainEvent, DomainTime } from '@core/ddd';
-import { EntityId } from '@core/types';
-import { IAction } from '@core/actions';
+import { AbstractAggregateRoot, DomainTime } from '../../core/ddd';
+import { EntityId } from '../../core/types';
 
 import { Individual } from './individual.entity';
 import {
   IndividualCreated,
   IndividualEnergyChanged,
-  IndividualCollapsed,
-  IndividualOverwhelmed,
-  IndividualEnteredRecovery,
-  IndividualDailyReflection,
   IndividualStartedToSleep,
   IndividualEndedSleep,
 } from './individual.events';
 
-// Value Objects
-import {
-  Energy,
-  Metadata,
-  Psychology,
-  Physiology,
-  Skills,
-  Learning,
-  Timeline,
-  Social,
-  Effects,
-  Identity,
-} from './vo';
-
-// --- Behavior Classes ---
+import { Energy, Metadata, Physiology } from './vo';
+import { TimeUtils } from '../../shared/utils/time.util';
 
 class PhysiologyBehavior {
   constructor(private individual: Individual) {}
@@ -38,10 +20,18 @@ class PhysiologyBehavior {
   }
 
   endSleep() {
-    const sleepSince = this.individual.physiology.sleepSince;
+    const sleepDuration = this.individual.physiology.sleepDuration;
+    const restoredEnergyValue = this.sleepEnergyCalculation(sleepDuration);
     this.individual.physiology = this.individual.physiology.markSleepEnded();
-    const sleepDurationMs = DomainTime.now().diffMs(sleepSince!);
-    return sleepDurationMs;
+    this.individual.energy = this.individual.energy.increaseBy(restoredEnergyValue);
+    return [sleepDuration, restoredEnergyValue];
+  }
+
+  sleepEnergyCalculation(sleepDuration: DomainTime) {
+    const indivMaxEnergy = this.individual.energy.max;
+    const sleepHours = TimeUtils.toHours(sleepDuration);
+    const ratio = Math.min(1, sleepHours / 7);
+    return Math.floor(indivMaxEnergy * ratio);
   }
 }
 
@@ -59,26 +49,9 @@ export class IndividualAggregate extends AbstractAggregateRoot<EntityId> {
     const newId = id;
     const metadata = Metadata.create({ name });
     const energy = Energy.create({ value: 100, max: 100 });
-    const psychology = Psychology.create({});
     const physiology = Physiology.create({});
-    const skills = Skills.create({});
-    const learning = Learning.create({});
-    const timeline = Timeline.create({});
-    const social = Social.create({});
-    const effects = Effects.create({});
 
-    const individual = Individual.create(
-      newId,
-      metadata,
-      energy,
-      psychology,
-      physiology,
-      skills,
-      learning,
-      timeline,
-      social,
-      effects,
-    );
+    const individual = Individual.create(newId, metadata, energy, physiology);
 
     const aggregate = new IndividualAggregate(individual);
     aggregate.addDomainEvent(new IndividualCreated(aggregate.id));
@@ -93,7 +66,20 @@ export class IndividualAggregate extends AbstractAggregateRoot<EntityId> {
   }
 
   public endSleep(): void {
-    const sleepDuration = this.physiology.endSleep();
+    const energyBefore = this.individual.energy.current;
+    const [sleepDuration, energyRestored] = this.physiology.endSleep();
     this.addDomainEvent(new IndividualEndedSleep(this.id, sleepDuration));
+    this.addDomainEvent(
+      new IndividualEnergyChanged(
+        this.id,
+        energyBefore,
+        this.individual.energy.current,
+        energyRestored,
+      ),
+    );
+  }
+
+  get snapshot() {
+    return this.individual.snapshot;
   }
 }

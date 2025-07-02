@@ -1,5 +1,7 @@
+import { IndividualAggregate } from './modules';
+
 export const engine = {
-  init: () => {
-    console.log('game engine init');
+  createPlayer(id: string, name: string) {
+    return IndividualAggregate.create(id, name);
   },
 };
